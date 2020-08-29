@@ -72,7 +72,7 @@ class Admin extends React.Component {
                     </React.Fragment>
                 )}
                 <h4>Connected players:</h4>
-                {this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
+                {Array.isArray(this.state.players) && this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
             </div>
         );
     }

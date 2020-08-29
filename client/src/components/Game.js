@@ -32,7 +32,7 @@ class Game extends React.Component {
         axios.get("/api/buzzer").then(res => {
             this.setState({
                 canBuzz: res.data.canBuzz,
-                whoBuzzed: res.data.name
+                whoBuzzed: res.data.name.name
             });
         });
 
@@ -45,6 +45,7 @@ class Game extends React.Component {
 
         //listen for other users to log off
         this.socket.on("disconnect", data => {
+            console.log(data);
             this.setState({
             players: data
             });
@@ -124,7 +125,7 @@ class Game extends React.Component {
                         <h4>{this.state.whoBuzzed} has buzzed.</h4>
                     )}
                     <h4>Connected players:</h4>
-                    {this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
+                    {Array.isArray(this.state.players) && this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
                 </div>
                 )}
             </div>
