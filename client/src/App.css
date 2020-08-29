@@ -30,3 +30,17 @@
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
+.buzzer{
+  width: 320px;
+  height: 180px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background: blue;
+}
+
+.buzzer:hover{
+  border: solid black 1px;
+  transition: 0.3s;
+}

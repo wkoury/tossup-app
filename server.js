@@ -12,21 +12,21 @@ let players = []; //an array of players connected to the game
 //socket.io
 const options = { /* ... */ };
 const io = require("socket.io")(server, options);
-io.on("connection", socket => { 
-    console.log("User connected.")
+io.on("connection", socket => {
+    console.log("User connected.");
+    socket.on("login", data => {
+        players.push(data);
+        io.emit("login", players);
+    });
 
-    socket.on("disconnect", function(){
+    socket.on("disconnect", function () {
         console.log("User disconnected.");
     });
 });
 
-app.get("/api/ping", function (req, res) {
-    return res.send("Backend connected!");
-});
-
 // Handles any requests that don"t match the ones above
-app.get("*", (req,res) =>{
-    res.sendFile(path.join(__dirname+"/client/build/index.html"));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/build/index.html"));
 });
 
 server.listen(port, () => {
