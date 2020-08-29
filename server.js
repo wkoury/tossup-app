@@ -9,8 +9,7 @@ const port = process.env.PORT || 8085;
 
 app.use(compression()); // compress all routes
 app.use(helmet()); // add some security
-app.use(express.static(path.join(__dirname, "client/build")));
-
+app.use(express.static(path.join(__dirname, "./client/build")));
 let players = []; //an array of players connected to the game
 
 //socket.io
@@ -29,7 +28,7 @@ io.on("connection", socket => {
 
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/client/build/index.html"));
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 server.listen(port, () => {
