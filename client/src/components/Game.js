@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import io from "socket.io-client";
 import "../App.css";
 
@@ -9,7 +10,9 @@ class Game extends React.Component {
             name: "",
             login: false,
             players: [],
-            myKey: Date.now()
+            myKey: Date.now(),
+            canBuzz: true,
+            whoBuzzed: ""
         };
 
         this.socket = io();
@@ -20,6 +23,19 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
+        axios.get("/api/players").then(res => {
+            this.setState({
+                players: res.data
+            });
+        });
+
+        axios.get("/api/buzzer").then(res => {
+            this.setState({
+                canBuzz: res.data.canBuzz,
+                whoBuzzed: res.data.name
+            });
+        });
+
         //listen for other users to log on
         this.socket.on("login", data => {
             this.setState({
@@ -35,8 +51,8 @@ class Game extends React.Component {
         });
 
         //listen for other users to buzz
-        this.socket.on("buzz", () => {
-            this.setState({ canBuzz: false });
+        this.socket.on("buzz", data => {
+            this.setState({ canBuzz: false, whoBuzzed: data.name.name });
         });
 
         //listen for buzzer to be cleared
@@ -65,7 +81,17 @@ class Game extends React.Component {
             },
             () => {/* callback function */ });
         }
-    };
+    }
+
+    handleBuzz = event => {
+        event.preventDefault();
+        this.socket.emit("buzz", 
+        {
+            name: this.state.name,
+            key: this.state.key
+        },
+        () => {/* callback function */});
+    }
 
     render() {
         return (
@@ -92,9 +118,11 @@ class Game extends React.Component {
                 </div>
             ) : (
                 <div>
-                    <div>
-                    <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
-                    </div>
+                    {this.state.canBuzz ? (<div>
+                        <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
+                    </div>) : (
+                        <h4>{this.state.whoBuzzed} has buzzed.</h4>
+                    )}
                     <h4>Connected players:</h4>
                     {this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
                 </div>
