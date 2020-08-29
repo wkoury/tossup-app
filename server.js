@@ -2,13 +2,9 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
-var compression = require("compression");
-var helmet = require("helmet");
 
 const port = process.env.PORT || 8085;
 
-app.use(compression()); // compress all routes
-app.use(helmet()); // add some security
 app.use(express.static(path.join(__dirname, "./client/build")));
 let players = []; //an array of players connected to the game
 
