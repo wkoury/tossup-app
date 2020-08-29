@@ -1,6 +1,9 @@
 {
   "name": "react-express-boilerplate",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.16.0"
+  },
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -11,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.17.1",
+    "helmet": "^4.1.0",
     "nodemon": "^2.0.4",
     "socket.io": "^2.3.0"
   }

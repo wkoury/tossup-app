@@ -8,7 +8,8 @@ class App extends React.Component {
     this.state = {
       name: "",
       login: false,
-      players: []
+      players: [],
+      myKey: Date.now()
     };
 
     this.socket = io();
@@ -18,15 +19,31 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    //listen for other users to log on
     this.socket.on("login", data => {
       this.setState({
         players: data
       });
     });
-  }
 
-  componentWillUnmount() {
-    this.socket.close();
+    //listen for other users to log off
+    this.socket.on("disconnect", data => {
+      this.setState({
+        players: data
+      });
+    });
+
+    //listen for other users to buzz
+    this.socket.on("buzz", () => {
+      this.setState({ canBuzz: false });
+    });
+
+    //listen for buzzer to be cleared
+    this.socket.on("clear", () => {
+      this.setState({ canBuzz: true });
+    });
+
+
   }
 
   handleChange = event => {
@@ -45,7 +62,7 @@ class App extends React.Component {
       this.socket.emit("login",
         {
           name: this.state.name,
-          key: Date.now()
+          key: this.state.myKey
         },
         () => {/* callback function */ });
     }

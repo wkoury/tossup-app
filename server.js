@@ -2,9 +2,13 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
+var compression = require("compression");
+var helmet = require("helmet");
 
 const port = process.env.PORT || 8085;
 
+app.use(compression()); // compress all routes
+app.use(helmet()); // add some security
 app.use(express.static(path.join(__dirname, "client/build")));
 
 let players = []; //an array of players connected to the game
@@ -13,14 +17,13 @@ let players = []; //an array of players connected to the game
 const options = { /* ... */ };
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
-    console.log("User connected.");
     socket.on("login", data => {
         players.push(data);
         io.emit("login", players);
     });
 
-    socket.on("disconnect", function () {
-        console.log("User disconnected.");
+    socket.on("disconnect", () => {
+        //?
     });
 });
 
@@ -30,5 +33,5 @@ app.get("*", (req, res) => {
 });
 
 server.listen(port, () => {
-    console.log(`Server running on port ${port}.`)
+    console.log(`Server running on port ${port}.`);
 });
