@@ -26,9 +26,10 @@ class Admin extends React.Component {
         });
 
         axios.get("/api/buzzer").then(res => {
+            console.log(res.data);
             this.setState({
                 canBuzz: res.data.canBuzz,
-                whoBuzzed: res.data.name
+                whoBuzzed: res.data.name.name
             });
         });
 
@@ -47,8 +48,8 @@ class Admin extends React.Component {
         });
 
         //listen for other users to buzz
-        this.socket.on("buzz", () => {
-            this.setState({ canBuzz: false });
+        this.socket.on("buzz", data => {
+            this.setState({ canBuzz: false, whoBuzzed: data.name.name });
         });
 
         this.socket.on("clear", () => {
