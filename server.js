@@ -16,10 +16,6 @@ io.on("connection", socket => {
         players.push(data);
         io.emit("login", players);
     });
-
-    socket.on("disconnect", () => {
-        //?
-    });
 });
 
 // Handles any requests that don"t match the ones above
