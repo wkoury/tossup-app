@@ -5,7 +5,6 @@ Make sure you have NodeJS installed first.
 Clone this repository, and then run the following commands:
 ```
 npm install
-cd client
 npm run build
 ```
 
