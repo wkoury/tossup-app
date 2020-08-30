@@ -1,5 +1,5 @@
 {
-  "name": "react-express-boilerplate",
+  "name": "buzzer-system",
   "version": "1.0.0",
   "engines": {
     "node": "10.16.0"

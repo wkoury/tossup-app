@@ -8,8 +8,7 @@ const port = process.env.PORT || 8085;
 app.use(express.static(path.join(__dirname, "./client/build")));
 
 //an array of players connected to the game
-let players = []; 
-let teamsMode = false; //whether or not we are in teams mode. Default mode is false.
+let players = [];
 
 //an object representing whether or not the buzzer is locked
 //and the name of the player who buzzed first
@@ -19,7 +18,10 @@ let buzzer = {
 };
 
 //socket.io
-const options = { /* ... */ };
+const options = {
+    pingInterval: 2000,
+    pingTimeout: 5000
+};
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
     socket.on("login", data => {
@@ -37,6 +39,26 @@ io.on("connection", socket => {
         buzzer.canBuzz = true;
         io.emit("clear", buzzer);
     });
+
+    //reset all variables, the game must return to its starting state
+    socket.on("reset", () => {
+        buzzer = {
+            canBuzz: true,
+            name: ""
+        };
+        players = [];
+        io.emit("clear", buzzer);
+        io.emit("login", players);
+    });
+
+    // socket.on("disconnect", data => {
+    //     console.log(data);
+    //     let index = players.indexOf(data);
+    //     if (index >= 0) {
+    //         players.splice(index, 1);
+    //     }
+    //     io.emit("disconnect", players);
+    // });
 });
 
 //initial api requests

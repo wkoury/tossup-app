@@ -6,11 +6,11 @@ class Players extends React.Component {
     render() {
         const { players } = this.props;
 
-        if(Array.isArray(players)){
+        if (Array.isArray(players)) {
             const team1 = players.filter(player => players.indexOf(player) % 2 === 0);
             const team2 = players.filter(player => players.indexOf(player) % 2 !== 0);
-            return(
-                <div>
+            return (
+                <div className="row">
                     <div className="column left">
                         <h5>Team 1</h5>
                         {team1.map(player => <p key={player.key}>{player.name}</p>)}
@@ -21,7 +21,7 @@ class Players extends React.Component {
                     </div>
                 </div>
             );
-        }else{
+        } else {
             return null;
         }
     }

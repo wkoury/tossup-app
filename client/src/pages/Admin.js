@@ -5,7 +5,7 @@ import Players from "../components/Players";
 import "../App.css";
 
 class Admin extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -16,9 +16,10 @@ class Admin extends React.Component {
 
         this.socket = io();
         this.handleClear = this.handleClear.bind(this);
+        this.handleReset = this.handleReset.bind(this);
     }
-    
-    componentDidMount(){
+
+    componentDidMount() {
         //initial data loads
         axios.get("/api/players").then(res => {
             this.setState({
@@ -61,17 +62,25 @@ class Admin extends React.Component {
         event.preventDefault();
         this.socket.emit("clear");
     }
-    
+
+    handleReset = event => {
+        event.preventDefault();
+        this.socket.emit("reset");
+    }
+
     render() {
-        return(
+        return (
             <div className="App">
                 {!this.state.canBuzz && (
                     <React.Fragment>
-                        <button className="clear" onClick={e => this.handleClear(e)}>Clear</button>
+                        <button className="clear" onClick={e => this.handleClear(e)}>Clear Buzzer</button>
                         <p>{this.state.whoBuzzed} has buzzed.</p>
                     </React.Fragment>
                 )}
                 <Players players={this.state.players} />
+                <div className="footer">
+                    <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
+                </div>
             </div>
         );
     }

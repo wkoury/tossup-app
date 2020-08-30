@@ -82,3 +82,22 @@ body {
   float: left;
   width: 50%;
 }
+
+.footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.reset {
+  margin-top: 100px;
+  width: 120px;
+  height: 50px;
+  border: none;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  color: white;
+  background: red;
+}

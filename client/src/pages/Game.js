@@ -23,11 +23,23 @@ class Game extends React.Component {
         this.handleBuzz = this.handleBuzz.bind(this);
     }
 
+
+
     componentDidMount() {
         axios.get("/api/players").then(res => {
             this.setState({
                 players: res.data
             });
+
+            res.data.forEach(player => {
+                if (player.key === JSON.parse(localStorage.getItem("player")).key) {
+                    this.setState({
+                        login: true,
+                        name: JSON.parse(localStorage.getItem("player")).name,
+                        myKey: JSON.parse(localStorage.getItem("player")).key
+                    });
+                }
+            })
         });
 
         axios.get("/api/buzzer").then(res => {
@@ -42,24 +54,32 @@ class Game extends React.Component {
             this.setState({
                 players: data
             });
+            if (data.length === 0) {
+                this.setState({ login: false });
+            }
         });
 
-        //listen for other users to log off
-        this.socket.on("disconnect", data => {
-            console.log(data);
-            this.setState({
-            players: data
-            });
-        });
+        // //listen for other users to log off
+        // this.socket.on("disconnect", data => {
+        //     console.log(data);
+        //     this.setState({
+        //         players: data
+        //     });
+        // });
 
         //listen for other users to buzz
         this.socket.on("buzz", data => {
-            this.setState({ canBuzz: false, whoBuzzed: data.name.name });
+            this.setState({
+                canBuzz: false,
+                whoBuzzed: data.name.name
+            });
         });
 
         //listen for buzzer to be cleared
         this.socket.on("clear", () => {
-            this.setState({ canBuzz: true });
+            this.setState({
+                canBuzz: true
+            });
         });
     }
 
@@ -74,60 +94,65 @@ class Game extends React.Component {
         event.preventDefault();
         if (this.state.name !== "") {
             this.setState({
-            login: true
+                login: true
             });
             this.socket.emit("login",
+                {
+                    name: this.state.name,
+                    key: this.state.myKey
+                },
+                () => {/* callback function */ });
+        }
+
+        localStorage.setItem("player", JSON.stringify({
+            name: this.state.name,
+            key: this.state.myKey
+        }));
+    }
+
+    handleBuzz = event => {
+        event.preventDefault();
+        this.socket.emit("buzz",
             {
                 name: this.state.name,
                 key: this.state.myKey
             },
             () => {/* callback function */ });
-        }
-    }
-
-    handleBuzz = event => {
-        event.preventDefault();
-        this.socket.emit("buzz", 
-        {
-            name: this.state.name,
-            key: this.state.key
-        },
-        () => {/* callback function */});
     }
 
     render() {
         return (
             <div className="App">
-            {this.state.login === false ? (
-                <div className="initialization">
-                <h4>Enter your name:</h4>
-                <div className="form-fields">
-                    <input
-                    className="name-input"
-                    type="text"
-                    placeholder="Name"
-                    name="name"
-                    value={this.state.name}
-                    onChange={e => this.handleChange(e)}
-                    ></input>
-                    <button
-                    className="name-submit"
-                    onClick={(e) => this.handleLogin(e)}
-                    >
-                    Join
+                {this.state.login === false ? (
+                    <div className="initialization">
+                        <h4>Enter your name:</h4>
+                        <div className="form-fields">
+                            <input
+                                className="name-input"
+                                type="text"
+                                placeholder="Name"
+                                name="name"
+                                value={this.state.name}
+                                onChange={e => this.handleChange(e)}
+                            ></input>
+                            <button
+                                className="name-submit"
+                                onClick={(e) => this.handleLogin(e)}
+                            >
+                                Join
                     </button>
-                </div>
-                </div>
-            ) : (
-                <div>
-                    {this.state.canBuzz ? (<div>
-                        <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
-                    </div>) : (
-                        <h4>{this.state.whoBuzzed} has buzzed.</h4>
+                        </div>
+                    </div>
+                ) : (
+                        <div>
+                            {this.state.canBuzz ? (<div>
+                                <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
+                            </div>) : (
+                                    <h4>{this.state.whoBuzzed} has buzzed.</h4>
+                                )}
+                            <Players players={this.state.players} />
+                        </div>
                     )}
-                    <Players players={this.state.players} />
-                </div>
-                )}
             </div>
         );
     }
