@@ -12,10 +12,10 @@ npm run build
 There are 2 ways to run this app:
 
 ### Development
-You will need 2 terminals for this. In the first terminal, run ```npm start```. In the second terminal run ```cd client``` and then run ```npm start```.
+You will need 2 terminals for this. In the first terminal, run ```npm run dev```. In the second terminal run ```cd client``` and then run ```npm start```.
 
 ### Production
-The Express server can serve the React app if you have built the React app (this can be done by running ```npm run build``` in the root directory. If the build exists, simply run ```node server``` in the root directory. If you open your browswer to http://localhost:8085, you should see the production version of your React app.
+The Express server can serve the React app if you have built the React app (this can be done by running ```npm run build``` in the root directory. If the build exists, simply run ```npm start``` in the root directory. If you open your browswer to http://localhost:8085, you should see the production version of your React app.
 
 ## Other Notes
 The default proxy port is 8085, but you can change this in client/package.json and server.js.
