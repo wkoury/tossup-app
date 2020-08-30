@@ -1,6 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
+import Players from "../components/Players";
 import "../App.css";
 
 class Admin extends React.Component {
@@ -26,7 +27,6 @@ class Admin extends React.Component {
         });
 
         axios.get("/api/buzzer").then(res => {
-            console.log(res.data);
             this.setState({
                 canBuzz: res.data.canBuzz,
                 whoBuzzed: res.data.name.name
@@ -71,8 +71,7 @@ class Admin extends React.Component {
                         <p>{this.state.whoBuzzed} has buzzed.</p>
                     </React.Fragment>
                 )}
-                <h4>Connected players:</h4>
-                {Array.isArray(this.state.players) && this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
+                <Players players={this.state.players} />
             </div>
         );
     }

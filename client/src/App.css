@@ -1,12 +1,14 @@
+body {
+  background: #282c34;
+}
+
 .App {
   text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-size: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
@@ -31,7 +33,7 @@
   border-bottom-right-radius: 5px;
 }
 
-.buzzer{
+.buzzer {
   width: 320px;
   height: 180px;
   border: none;
@@ -41,7 +43,7 @@
   background: #61dafb;
 }
 
-.buzzer:hover{
+.buzzer:hover {
   border: solid black 1px;
   transition: 0.3s;
 }
@@ -56,7 +58,27 @@
   background: red;
 }
 
-.clear:hover{
+.clear:hover {
   border: solid black 1px;
   transition: 0.3s;
+}
+
+.teams-button {
+  width: 200px;
+  height: 90px;
+  border: none;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  color: white;
+  background: green;
+}
+
+.teams-button:hover {
+  border: solid black 1px;
+  transition: 0.3s;
+}
+
+.column{
+  float: left;
+  width: 50%;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import io from "socket.io-client";
+import Players from "../components/Players";
 import "../App.css";
 
 class Game extends React.Component {
@@ -124,8 +125,7 @@ class Game extends React.Component {
                     </div>) : (
                         <h4>{this.state.whoBuzzed} has buzzed.</h4>
                     )}
-                    <h4>Connected players:</h4>
-                    {Array.isArray(this.state.players) && this.state.players.map(player => <p key={player.key}>{player.name}</p>)}
+                    <Players players={this.state.players} />
                 </div>
                 )}
             </div>

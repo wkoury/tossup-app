@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 
 //an array of players connected to the game
 let players = []; 
+let teamsMode = false; //whether or not we are in teams mode. Default mode is false.
 
 //an object representing whether or not the buzzer is locked
 //and the name of the player who buzzed first
@@ -35,7 +36,7 @@ io.on("connection", socket => {
     socket.on("clear", data => {
         buzzer.canBuzz = true;
         io.emit("clear", buzzer);
-    })
+    });
 });
 
 //initial api requests
