@@ -35,6 +35,7 @@
   width: 320px;
   height: 180px;
   border: none;
+  font-size: 1.5rem;
   border-radius: 5px;
   color: white;
   background: #61dafb;
@@ -49,6 +50,7 @@
   width: 320px;
   height: 180px;
   border: none;
+  font-size: 1.5rem;
   border-radius: 5px;
   color: white;
   background: red;
