@@ -3,12 +3,16 @@ body {
 }
 
 .App {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
   text-align: center;
   font-size: 1.5rem;
-  max-width: 600px;
+  width: 700px;
   margin: 0 auto;
-  align-items: center;
-  justify-content: center;
   color: white;
 }
 
@@ -34,8 +38,8 @@ body {
 }
 
 .buzzer {
-  width: 320px;
-  height: 180px;
+  width: 120px;
+  height: 60px;
   border: none;
   font-size: 1.5rem;
   border-radius: 5px;
@@ -43,39 +47,14 @@ body {
   background: #61dafb;
 }
 
-.buzzer:hover {
-  border: solid black 1px;
-  transition: 0.3s;
-}
-
 .clear {
-  width: 320px;
-  height: 180px;
+  width: 120px;
+  height: 60px;
   border: none;
   font-size: 1.5rem;
   border-radius: 5px;
   color: white;
   background: red;
-}
-
-.clear:hover {
-  border: solid black 1px;
-  transition: 0.3s;
-}
-
-.teams-button {
-  width: 200px;
-  height: 90px;
-  border: none;
-  font-size: 1.5rem;
-  border-radius: 5px;
-  color: white;
-  background: green;
-}
-
-.teams-button:hover {
-  border: solid black 1px;
-  transition: 0.3s;
 }
 
 .column{
