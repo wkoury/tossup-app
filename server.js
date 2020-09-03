@@ -1,7 +1,9 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
+app.use(bodyParser.json());
 
 const port = process.env.PORT || 8085;
 
@@ -16,6 +18,8 @@ let buzzer = {
     canBuzz: true,
     name: ""
 };
+
+const ADMIN_PASSWORD = "chonka1";
 
 //socket.io
 const options = {
@@ -68,7 +72,15 @@ app.get("/api/players", (req, res) => {
 
 app.get("/api/buzzer", (req, res) => {
     res.status(200).send(buzzer);
-})
+});
+
+app.post("/api/admin", (req, res) => {
+    if(req.body.password===ADMIN_PASSWORD){
+        return res.status(200).send("yes");
+    }else{
+        return res.status(200).send("no");
+    }
+});
 
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {
