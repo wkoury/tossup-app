@@ -92,6 +92,12 @@ class Game extends React.Component {
 
     handleLogin = (event) => {
         event.preventDefault();
+
+        if(this.state.name.length >= 15){
+            alert("The name you entered is too long!");
+            return;
+        }
+
         if (this.state.name !== "") {
             this.setState({
                 login: true
