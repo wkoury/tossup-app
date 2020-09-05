@@ -16,10 +16,11 @@ let players = [];
 //and the name of the player who buzzed first
 let buzzer = {
     canBuzz: true,
-    name: ""
+    name: "",
+    key: ""
 };
 
-const ADMIN_PASSWORD = "chonka1";
+const ADMIN_PASSWORD = "chonka1"; //FIXME
 
 //socket.io
 const options = {
@@ -34,13 +35,20 @@ io.on("connection", socket => {
     });
 
     socket.on("buzz", data => {
-        buzzer.name = data;
-        buzzer.canBuzz = false;
+        buzzer = {
+            canBuzz: false,
+            name: data.name,
+            key: data.key
+        };
         io.emit("buzz", buzzer);
     });
 
     socket.on("clear", data => {
-        buzzer.canBuzz = true;
+        buzzer = {
+            canBuzz: true,
+            name: "",
+            key: ""
+        };
         io.emit("clear", buzzer);
     });
 
@@ -48,7 +56,8 @@ io.on("connection", socket => {
     socket.on("reset", () => {
         buzzer = {
             canBuzz: true,
-            name: ""
+            name: "",
+            key: ""
         };
         players = [];
         io.emit("clear", buzzer);

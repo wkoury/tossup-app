@@ -13,7 +13,10 @@ class Game extends React.Component {
             players: [],
             myKey: Date.now(),
             canBuzz: true,
-            whoBuzzed: ""
+            whoBuzzed: {
+                name: "",
+                key: ""
+            }
         };
 
         this.socket = io();
@@ -45,7 +48,10 @@ class Game extends React.Component {
         axios.get("/api/buzzer").then(res => {
             this.setState({
                 canBuzz: res.data.canBuzz,
-                whoBuzzed: res.data.name.name
+                whoBuzzed: {
+                    name: res.data.name,
+                    key: res.data.key
+                }
             });
         });
 
@@ -71,14 +77,21 @@ class Game extends React.Component {
         this.socket.on("buzz", data => {
             this.setState({
                 canBuzz: false,
-                whoBuzzed: data.name.name
+                whoBuzzed: {
+                    name: data.name,
+                    key: data.key
+                }
             });
         });
 
         //listen for buzzer to be cleared
-        this.socket.on("clear", () => {
+        this.socket.on("clear", data => {
             this.setState({
-                canBuzz: true
+                canBuzz: true,
+                whoBuzzed: {
+                    name: data.name,
+                    key: data.key
+                }
             });
         });
     }
@@ -127,6 +140,7 @@ class Game extends React.Component {
     }
 
     render() {
+
         return (
             <div className="App">
                 {this.state.login === false ? (
@@ -154,9 +168,9 @@ class Game extends React.Component {
                             {this.state.canBuzz ? (<div>
                                 <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
                             </div>) : (
-                                    <h4>{this.state.whoBuzzed} has buzzed.</h4>
+                                    <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                                 )}
-                            <Players players={this.state.players} />
+                            <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
                         </div>
                     )}
             </div>

@@ -13,7 +13,10 @@ class Admin extends React.Component {
             password: "",
             canBuzz: true,
             players: [],
-            whoBuzzed: ""
+            whoBuzzed: {
+                name: "",
+                key: ""
+            }
         };
 
         this.socket = io();
@@ -33,7 +36,10 @@ class Admin extends React.Component {
         axios.get("/api/buzzer").then(res => {
             this.setState({
                 canBuzz: res.data.canBuzz,
-                whoBuzzed: res.data.name.name
+                whoBuzzed: {
+                    name: res.data.name,
+                    key: res.data.key
+                }
             });
         });
 
@@ -53,12 +59,24 @@ class Admin extends React.Component {
 
         //listen for other users to buzz
         this.socket.on("buzz", data => {
-            this.setState({ canBuzz: false, whoBuzzed: data.name.name });
+            this.setState({ 
+                canBuzz: false, 
+                whoBuzzed: {
+                    name: data.name,
+                    key: data.key
+                } 
+            });
         });
 
-        this.socket.on("clear", () => {
-            this.setState({ canBuzz: true });
-        })
+        this.socket.on("clear", data => {
+            this.setState({
+                canBuzz: true,
+                whoBuzzed: {
+                    name: data.name,
+                    key: data.key
+                }
+            });
+        });
     }
 
     handleChange = event => {
@@ -94,10 +112,10 @@ class Admin extends React.Component {
                     {!this.state.canBuzz && (
                         <React.Fragment>
                             <button className="clear" onClick={e => this.handleClear(e)}>Clear Buzzer</button>
-                            <p>{this.state.whoBuzzed} has buzzed.</p>
+                            <p>{this.state.whoBuzzed.name} has buzzed.</p>
                         </React.Fragment>
                     )}
-                    <Players players={this.state.players} />
+                    <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
                     <div className="footer">
                         <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
                     </div>
