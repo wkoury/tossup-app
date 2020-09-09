@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 8085;
 
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 //an array of players connected to the game
 let players = [];
@@ -93,7 +93,7 @@ app.post("/api/admin", (req, res) => {
 
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 server.listen(port, () => {
