@@ -11,7 +11,7 @@
     "dev": "nodemon server.js",
     "heroku-postbuild": "cd client && npm i && npm run build",
     "build": "cd client && npm run build",
-    "test": "cd client && npm i && npm run build"
+    "test": "cd client && npm i && npm test && npm run build"
   },
   "keywords": [],
   "author": "",
