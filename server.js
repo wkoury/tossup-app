@@ -64,14 +64,18 @@ io.on("connection", socket => {
         io.emit("login", players);
     });
 
-    // socket.on("disconnect", data => {
-    //     console.log(data);
-    //     let index = players.indexOf(data);
-    //     if (index >= 0) {
-    //         players.splice(index, 1);
-    //     }
-    //     io.emit("disconnect", players);
-    // });
+    socket.on("disconnect", () => {
+        let index = -1;
+        for(let i = 0; i < players.length; ++i){
+            if(players[i].key === socket.id){
+                index = i;
+            }
+        }
+        if (index >= 0) {
+            players.splice(index, 1);
+        }
+        io.emit("disconnect", players);
+    });
 });
 
 //initial api requests

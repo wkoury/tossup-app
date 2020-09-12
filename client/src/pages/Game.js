@@ -11,7 +11,6 @@ class Game extends React.Component {
             name: "",
             login: false,
             players: [],
-            myKey: Date.now(),
             canBuzz: true,
             whoBuzzed: {
                 name: "",
@@ -25,8 +24,6 @@ class Game extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleBuzz = this.handleBuzz.bind(this);
     }
-
-
 
     componentDidMount() {
         axios.get("/api/players").then(res => {
@@ -65,13 +62,12 @@ class Game extends React.Component {
             }
         });
 
-        // //listen for other users to log off
-        // this.socket.on("disconnect", data => {
-        //     console.log(data);
-        //     this.setState({
-        //         players: data
-        //     });
-        // });
+        //listen for other users to log off
+        this.socket.on("disconnect", data => {
+            this.setState({
+                players: data
+            });
+        });
 
         //listen for other users to buzz
         this.socket.on("buzz", data => {
@@ -79,7 +75,7 @@ class Game extends React.Component {
                 canBuzz: false,
                 whoBuzzed: {
                     name: data.name,
-                    key: data.key
+                    key: this.socket.id
                 }
             });
         });
@@ -92,6 +88,13 @@ class Game extends React.Component {
                     name: data.name,
                     key: data.key
                 }
+            });
+        });
+
+        //on player disconnect
+        this.socket.on("disconnect", data => {
+            this.setState({
+                players: data
             });
         });
     }
@@ -118,14 +121,14 @@ class Game extends React.Component {
             this.socket.emit("login",
                 {
                     name: this.state.name,
-                    key: this.state.myKey
+                    key: this.socket.id
                 },
                 () => {/* callback function */ });
         }
 
         localStorage.setItem("player", JSON.stringify({
             name: this.state.name,
-            key: this.state.myKey
+            key: this.socket.id
         }));
     }
 
@@ -134,7 +137,7 @@ class Game extends React.Component {
         this.socket.emit("buzz",
             {
                 name: this.state.name,
-                key: this.state.myKey
+                key: this.socket.id
             },
             () => {/* callback function */ });
     }

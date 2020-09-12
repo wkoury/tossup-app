@@ -14,7 +14,6 @@ class Players extends React.Component {
             }
         });
 
-        console.log(index);
 
         if(index % 2 === 0){
             team1Style = {

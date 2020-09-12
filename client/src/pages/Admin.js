@@ -89,7 +89,6 @@ class Admin extends React.Component {
     handleLogin = () => {
         axios.post("/api/admin", { password: this.state.password })
         .then(res => {
-            console.log(res.data);
             if(res.data==="yes"){
                 this.setState({ login: true });
             }
