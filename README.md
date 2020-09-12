@@ -26,6 +26,6 @@ The default proxy port is 8085, but you can change this in client/package.json a
 - [ ] Create data component as parent to ```Admin``` and ```Game```
 - [ ] Support multiple simultaneous instances
 - [ ] Add toggle teams feature
-- [ ] Improve handling of user disconnects
+- [x] Improve handling of user disconnects
 - [ ] Allow admins to remove players
 - [ ] Add light mode and dark mode (be able to toggle them!)
