@@ -10,7 +10,7 @@ body {
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
   width: 700px;
   margin: 0 auto;
   color: white;
@@ -79,4 +79,8 @@ body {
   border-radius: 5px;
   color: white;
   background: red;
+}
+
+a, a:visited {
+  color: lightcoral;
 }
