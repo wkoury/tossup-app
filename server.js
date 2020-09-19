@@ -58,7 +58,7 @@ io.on("connection", socket => {
             }
         }
         if (index >= 0) {
-            players.splice(index, 1);
+            players[index].disconnected = true;
         }
         io.emit("disconnect", players);
     });

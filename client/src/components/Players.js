@@ -51,11 +51,11 @@ class Players extends React.Component {
                 <div className="row">
                     <div className="column left" style={team1Style}>
                         <h5>Team 1</h5>
-                        {team1.map(player => <p key={player.key}>{player.name}</p>)}
+                        {team1.map(player => <p key={player.key} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>
                     <div className="column right" style={team2Style}>
                         <h5>Team 2</h5>
-                        {team2.map(player => <p key={player.key}>{player.name}</p>)}
+                        {team2.map(player => <p key={player.key} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>
                 </div>
             );

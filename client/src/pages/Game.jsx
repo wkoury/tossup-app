@@ -97,7 +97,8 @@ class Game extends React.Component {
             this.socket.emit("login",
                 {
                     name: this.state.name,
-                    key: this.socket.id
+                    key: this.socket.id,
+                    disconnected: false
                 },
                 () => {/* callback function */ });
         }
