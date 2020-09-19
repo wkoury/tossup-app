@@ -9,26 +9,32 @@ const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 
-//an array of players connected to the game
-let players = [];
+//this function should initialize a room for quiz bowl
+function createRoom() {
+    rooms.push({
+        players: [],
+        buzzer: {
+            canBuzz: true,
+            name: "",
+            key: ""
+        }
+    });
+}
 
-//an object representing whether or not the buzzer is locked
-//and the name of the player who buzzed first
-let buzzer = {
-    canBuzz: true,
-    name: "",
-    key: ""
-};
+//an array of the rooms created since the server was started
+let rooms = [];
 
-const ADMIN_PASSWORD = "chonka1"; //FIXME
 
 //socket.io
 const options = {
     pingInterval: 2000,
     pingTimeout: 5000
 };
+
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
+    console.log(socket.rooms);
+
     socket.on("login", data => {
         players.push(data);
         io.emit("login", players);
@@ -43,6 +49,24 @@ io.on("connection", socket => {
         io.emit("buzz", buzzer);
     });
 
+    socket.on("disconnect", () => {
+        let index = -1;
+        let players = rooms[socket.rooms[1]].players;
+        for (let i = 0; i < players.length; ++i) {
+            if (players[i].key === socket.id) {
+                index = i;
+            }
+        }
+        if (index >= 0) {
+            players.splice(index, 1);
+        }
+        io.emit("disconnect", players);
+    });
+});
+
+let admin = io.of("/admin");
+admin.on("connection", socket => {
+    //admin only functions
     socket.on("clear", data => {
         buzzer = {
             canBuzz: true,
@@ -50,6 +74,7 @@ io.on("connection", socket => {
             key: ""
         };
         io.emit("clear", buzzer);
+        admin.emit("clear", buzzer);
     });
 
     //reset all variables, the game must return to its starting state
@@ -61,38 +86,28 @@ io.on("connection", socket => {
         };
         players = [];
         io.emit("clear", buzzer);
+        admin.emit("clear", buzzer);
         io.emit("login", players);
+        admin.emit("login", players);
     });
+});
 
-    socket.on("disconnect", () => {
-        let index = -1;
-        for(let i = 0; i < players.length; ++i){
-            if(players[i].key === socket.id){
-                index = i;
-            }
-        }
-        if (index >= 0) {
-            players.splice(index, 1);
-        }
-        io.emit("disconnect", players);
-    });
+//API request to create a room
+app.get("/api/room", (req, res) => {
+    let newRoomID = rooms.length;
+    createRoom();
+    res.status(200).send({ id: newRoomID });
 });
 
 //initial api requests
 app.get("/api/players", (req, res) => {
-    res.status(200).send(players);
+    console.log(req.params.room);
+    res.status(200).send(rooms[req.params.room].players);
 });
 
 app.get("/api/buzzer", (req, res) => {
-    res.status(200).send(buzzer);
-});
-
-app.post("/api/admin", (req, res) => {
-    if(req.body.password===ADMIN_PASSWORD){
-        return res.status(200).send("yes");
-    }else{
-        return res.status(200).send("no");
-    }
+    console.log(req.params);
+    res.status(200).send(rooms[req.params.room].buzzer);
 });
 
 // Handles any requests that don"t match the ones above

@@ -8,6 +8,7 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            room: "",
             name: "",
             login: false,
             players: [],
@@ -26,32 +27,6 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-        axios.get("/api/players").then(res => {
-            this.setState({
-                players: res.data
-            });
-
-            res.data.forEach(player => {
-                if (player.key === JSON.parse(localStorage.getItem("player")).key) {
-                    this.setState({
-                        login: true,
-                        name: JSON.parse(localStorage.getItem("player")).name,
-                        myKey: JSON.parse(localStorage.getItem("player")).key
-                    });
-                }
-            })
-        });
-
-        axios.get("/api/buzzer").then(res => {
-            this.setState({
-                canBuzz: res.data.canBuzz,
-                whoBuzzed: {
-                    name: res.data.name,
-                    key: res.data.key
-                }
-            });
-        });
-
         //listen for other users to log on
         this.socket.on("login", data => {
             this.setState({
@@ -109,15 +84,16 @@ class Game extends React.Component {
     handleLogin = (event) => {
         event.preventDefault();
 
-        if(this.state.name.length >= 15){
+        if (this.state.name.length >= 15) {
             alert("The name you entered is too long!");
             return;
         }
 
-        if (this.state.name !== "") {
+        if (this.state.name !== "" && this.state.room !== "") {
             this.setState({
                 login: true
             });
+            this.socket.join(this.state.room);
             this.socket.emit("login",
                 {
                     name: this.state.name,
@@ -130,6 +106,32 @@ class Game extends React.Component {
             name: this.state.name,
             key: this.socket.id
         }));
+
+        axios.get("/api/players", { params: { room: this.state.room } }).then(res => {
+            this.setState({
+                players: res.data
+            });
+
+            res.data.forEach(player => {
+                if (player.key === JSON.parse(localStorage.getItem("player")).key) {
+                    this.setState({
+                        login: true,
+                        name: JSON.parse(localStorage.getItem("player")).name,
+                        myKey: JSON.parse(localStorage.getItem("player")).key
+                    });
+                }
+            })
+        });
+
+        axios.get("/api/buzzer").then(res => {
+            this.setState({
+                canBuzz: res.data.canBuzz,
+                whoBuzzed: {
+                    name: res.data.name,
+                    key: res.data.key
+                }
+            });
+        });
     }
 
     handleBuzz = event => {
@@ -148,8 +150,17 @@ class Game extends React.Component {
             <div className="App">
                 {this.state.login === false ? (
                     <div className="initialization">
-                        <h4>Enter your name:</h4>
+                        <h4>Enter your room & name:</h4>
                         <div className="form-fields">
+                            <input
+                                className="room-input"
+                                type="text"
+                                placeholder="Room ID"
+                                name="room"
+                                value={this.state.room}
+                                onChange={e => this.handleChange(e)}
+                            ></input>
+                            <br></br>
                             <input
                                 className="name-input"
                                 type="text"
