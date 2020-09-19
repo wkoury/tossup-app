@@ -93,11 +93,11 @@ class Game extends React.Component {
             this.setState({
                 login: true
             });
-            this.socket.join(this.state.room);
             this.socket.emit("login",
                 {
                     name: this.state.name,
                     key: this.socket.id,
+                    room: this.state.room,
                     disconnected: false
                 },
                 () => {/* callback function */ });

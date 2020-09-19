@@ -9,9 +9,13 @@ const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 
+//an array of the rooms created since the server was started
+let rooms = [];
+
 //this function should initialize a room for quiz bowl
 function createRoom() {
     rooms.push({
+        id: rooms.length, //we shall see if this is necessary
         players: [],
         buzzer: {
             canBuzz: true,
@@ -20,10 +24,6 @@ function createRoom() {
         }
     });
 }
-
-//an array of the rooms created since the server was started
-let rooms = [];
-
 
 //socket.io
 const options = {
