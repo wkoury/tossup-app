@@ -4,9 +4,6 @@ import axios from "axios";
 import Players from "../components/Players";
 import "../App.css";
 
-let adminSocket = io("/admin");
-let socket = io();
-
 class Admin extends React.Component {
     constructor(props) {
         super(props);
@@ -21,6 +18,8 @@ class Admin extends React.Component {
             }
         };
 
+        this.socket = io();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleClear = this.handleClear.bind(this);
         this.handleReset = this.handleReset.bind(this);
@@ -32,24 +31,28 @@ class Admin extends React.Component {
             this.setState({
                 room: res.data.id
             });
+
+            this.socket.emit("create", { room: res.data.id })
         });
 
+
         //listen for other users to log on
-        socket.on("login", data => {
+        this.socket.on("login", data => {
+            console.log(data);
             this.setState({
                 players: data
             });
         });
 
         //listen for other users to log off
-        socket.on("disconnect", data => {
+        this.socket.on("disconnect", data => {
             this.setState({
                 players: data
             });
         });
 
         //listen for other users to buzz
-        socket.on("buzz", data => {
+        this.socket.on("buzz", data => {
             this.setState({
                 canBuzz: false,
                 whoBuzzed: {
@@ -59,7 +62,7 @@ class Admin extends React.Component {
             });
         });
 
-        socket.on("clear", data => {
+        this.socket.on("clear", data => {
             this.setState({
                 canBuzz: true,
                 whoBuzzed: {
@@ -78,14 +81,15 @@ class Admin extends React.Component {
     }
 
     handleClear = () => {
-        adminSocket.emit("clear", { room: this.state.room });
+        this.socket.emit("clear", { room: this.state.room });
     }
 
     handleReset = () => {
-        adminSocket.emit("reset", { room: this.state.room });
+        this.socket.emit("reset", { room: this.state.room });
     }
 
     render() {
+        console.log(this.state.players);
         return (
             <div className="App">
                 <div className="room">

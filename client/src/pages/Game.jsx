@@ -66,7 +66,6 @@ class Game extends React.Component {
             });
         });
 
-        console.log(this.state.players);
         //on player disconnect
         this.socket.on("disconnect", data => {
             this.setState({
@@ -109,7 +108,7 @@ class Game extends React.Component {
             key: this.socket.id
         }));
 
-        axios.get("/api/players", { params: { room: this.state.room } }).then(res => {
+        axios.get(`/api/players/${this.state.room}`).then(res => {
             this.setState({
                 players: res.data
             });
@@ -125,7 +124,7 @@ class Game extends React.Component {
             })
         });
 
-        axios.get("/api/buzzer").then(res => {
+        axios.get(`/api/buzzer/${this.state.room}`).then(res => {
             this.setState({
                 canBuzz: res.data.canBuzz,
                 whoBuzzed: {
@@ -182,6 +181,10 @@ class Game extends React.Component {
                     </div>
                 ) : (
                         <div>
+                            <div className="room">
+                                <p>Game Room:</p>
+                                <h2>{this.state.room}</h2>
+                            </div>
                             {this.state.canBuzz ? (<div>
                                 <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
                             </div>) : (

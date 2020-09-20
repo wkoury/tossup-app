@@ -15,7 +15,7 @@ let rooms = [];
 //this function should initialize a room for quiz bowl
 function createRoom() {
     rooms.push({
-        id: rooms.length, //we shall see if this is necessary
+        id: rooms.length,
         players: [],
         buzzer: {
             canBuzz: true,
@@ -34,20 +34,45 @@ const options = {
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
 
+    socket.on("create", data => {
+        socket.join(rooms[data.room].id);
+    });
+
     socket.on("login", data => {
         rooms[data.room].players.push(data);
-        console.log(rooms[data.room].players);
-        socket.join(data.room);
-        io.to(data.room).emit("login", rooms[data.room].players);
+        socket.join(rooms[data.room].id);
+        io.in(data.room).emit("login", rooms[data.room].players);
     });
 
     socket.on("buzz", data => {
-        buzzer = {
+        rooms[data.room].buzzer = {
             canBuzz: false,
             name: data.name,
             key: data.key
         };
-        io.to(data.room).emit("buzz", buzzer);
+        io.in(data.room).emit("buzz", rooms[data.room].buzzer);
+    });
+
+    //admin only functions
+    socket.on("clear", data => {
+        rooms[data.room].buzzer = {
+            canBuzz: true,
+            name: "",
+            key: ""
+        };
+        io.in(data.room).emit("clear", rooms[data.room].buzzer);
+    });
+
+    //reset all variables, the game must return to its starting state
+    socket.on("reset", data => {
+        rooms[data.room].buzzer = {
+            canBuzz: true,
+            name: "",
+            key: ""
+        };
+        rooms[data.room].players = [];
+        io.in(data.room).emit("clear", rooms[data.room].buzzer);
+        io.in(data.room).emit("login", rooms[data.room].players);
     });
 
     socket.on("disconnect", () => {
@@ -56,7 +81,7 @@ io.on("connection", socket => {
         let room = -1;
         for (let i = 0; i < rooms.length; ++i) {
             for (let j = 0; j < rooms[i].players.length; ++j) {
-                if (players[i].key === socket.id) {
+                if (rooms[i].players[j].key === socket.id) {
                     room = i;
                     index = j;
                 }
@@ -68,36 +93,8 @@ io.on("connection", socket => {
         }
 
         if (room >= 0) {
-            io.to(room).emit("disconnect", rooms[room].players);
+            io.in(room).emit("disconnect", rooms[room].players);
         }
-    });
-});
-
-let admin = io.of("/admin");
-admin.on("connection", socket => {
-    //admin only functions
-    socket.on("clear", data => {
-        buzzer = {
-            canBuzz: true,
-            name: "",
-            key: ""
-        };
-        io.emit("clear", buzzer);
-        admin.emit("clear", buzzer);
-    });
-
-    //reset all variables, the game must return to its starting state
-    socket.on("reset", () => {
-        buzzer = {
-            canBuzz: true,
-            name: "",
-            key: ""
-        };
-        players = [];
-        io.emit("clear", buzzer);
-        admin.emit("clear", buzzer);
-        io.emit("login", players);
-        admin.emit("login", players);
     });
 });
 
@@ -109,13 +106,11 @@ app.get("/api/room", (req, res) => {
 });
 
 //initial api requests
-app.get("/api/players", (req, res) => {
-    console.log(req.params.room);
+app.get("/api/players/:room", (req, res) => {
     res.status(200).send(rooms[req.params.room].players);
 });
 
-app.get("/api/buzzer", (req, res) => {
-    console.log(req.params);
+app.get("/api/buzzer/:room", (req, res) => {
     res.status(200).send(rooms[req.params.room].buzzer);
 });
 
