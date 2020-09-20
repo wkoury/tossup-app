@@ -66,6 +66,7 @@ class Game extends React.Component {
             });
         });
 
+        console.log(this.state.players);
         //on player disconnect
         this.socket.on("disconnect", data => {
             this.setState({
@@ -140,7 +141,8 @@ class Game extends React.Component {
         this.socket.emit("buzz",
             {
                 name: this.state.name,
-                key: this.socket.id
+                key: this.socket.id,
+                room: this.state.room
             },
             () => {/* callback function */ });
     }

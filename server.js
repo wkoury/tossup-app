@@ -36,8 +36,9 @@ io.on("connection", socket => {
 
     socket.on("login", data => {
         rooms[data.room].players.push(data);
+        console.log(rooms[data.room].players);
         socket.join(data.room);
-        io.to(data.room).emit("login", players);
+        io.to(data.room).emit("login", rooms[data.room].players);
     });
 
     socket.on("buzz", data => {
@@ -46,7 +47,7 @@ io.on("connection", socket => {
             name: data.name,
             key: data.key
         };
-        io.emit("buzz", buzzer);
+        io.to(data.room).emit("buzz", buzzer);
     });
 
     socket.on("disconnect", () => {

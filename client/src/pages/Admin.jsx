@@ -78,11 +78,11 @@ class Admin extends React.Component {
     }
 
     handleClear = () => {
-        adminSocket.emit("clear");
+        adminSocket.emit("clear", { room: this.state.room });
     }
 
     handleReset = () => {
-        adminSocket.emit("reset");
+        adminSocket.emit("reset", { room: this.state.room });
     }
 
     render() {
