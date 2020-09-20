@@ -21,6 +21,7 @@ The default proxy port is 8085, but you can change this in client/package.json a
 
 # Progress
 - [ ] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)
+- [ ] Add error handling to the Express server
 - [x] Highlight the team that has buzzed (makes bonuses easier)
 - [ ] Add disconnect button for users (allows name change)
 - [ ] Create data component as parent to ```Admin``` and ```Game```

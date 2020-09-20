@@ -81,57 +81,62 @@ class Game extends React.Component {
         });
     }
 
+        
+
     handleLogin = (event) => {
         event.preventDefault();
 
-        if (this.state.name.length >= 15) {
+        if (this.state.name.length >= 25) {
             alert("The name you entered is too long!");
+            this.setState({
+                name: ""
+            });
             return;
         }
 
-        if (this.state.name !== "" && this.state.room !== "") {
-            this.setState({
-                login: true
-            });
-            this.socket.emit("login",
-                {
-                    name: this.state.name,
-                    key: this.socket.id,
-                    room: this.state.room,
-                    disconnected: false
-                },
-                () => {/* callback function */ });
-        }
-
-        localStorage.setItem("player", JSON.stringify({
-            name: this.state.name,
-            key: this.socket.id
-        }));
-
-        axios.get(`/api/players/${this.state.room}`).then(res => {
-            this.setState({
-                players: res.data
-            });
-
-            res.data.forEach(player => {
-                if (player.key === JSON.parse(localStorage.getItem("player")).key) {
+        axios.get(`/api/rooms/${this.state.room}`).then(res => {
+            if(res.data === "DNE"){
+                alert("That room does not exist!");
+                this.setState({
+                    room: ""
+                });
+                return false;
+            }else{
+                if (this.state.name !== "" && this.state.room !== "") {
                     this.setState({
-                        login: true,
-                        name: JSON.parse(localStorage.getItem("player")).name,
-                        myKey: JSON.parse(localStorage.getItem("player")).key
+                        login: true
                     });
+                    this.socket.emit("login",
+                        {
+                            name: this.state.name,
+                            key: this.socket.id,
+                            room: this.state.room,
+                            disconnected: false
+                        },
+                        () => {/* callback function */ });
                 }
-            })
-        });
-
-        axios.get(`/api/buzzer/${this.state.room}`).then(res => {
-            this.setState({
-                canBuzz: res.data.canBuzz,
-                whoBuzzed: {
-                    name: res.data.name,
-                    key: res.data.key
-                }
-            });
+    
+                localStorage.setItem("player", JSON.stringify({
+                    name: this.state.name,
+                    key: this.socket.id
+                }));
+    
+                axios.get(`/api/players/${this.state.room}`).then(res => {
+                    this.setState({
+                        players: res.data
+                    });
+                });
+    
+                axios.get(`/api/buzzer/${this.state.room}`).then(res => {
+                    this.setState({
+                        canBuzz: res.data.canBuzz,
+                        whoBuzzed: {
+                            name: res.data.name,
+                            key: res.data.key
+                        }
+                    });
+                });
+            }
         });
     }
 

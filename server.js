@@ -105,6 +105,23 @@ app.get("/api/room", (req, res) => {
     res.status(200).send({ id: newRoomID });
 });
 
+//API request to see if a room exists
+app.get("/api/rooms/:room", (req, res) => {
+    let found = false;
+
+    rooms.forEach(room => {
+        console.log(room.id);
+        if(+room.id === +req.params.room){ //+ converts to number type
+            found = true;
+            res.status(200).send("OK");
+        }
+    });
+
+    if(found === false){
+        res.status(200).send("DNE");
+    }
+});
+
 //initial api requests
 app.get("/api/players/:room", (req, res) => {
     res.status(200).send(rooms[req.params.room].players);
