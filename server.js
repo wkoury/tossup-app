@@ -9,90 +9,109 @@ const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 
-//an array of players connected to the game
-let players = [];
+//an array of the rooms created since the server was started
+let rooms = [];
 
-//an object representing whether or not the buzzer is locked
-//and the name of the player who buzzed first
-let buzzer = {
-    canBuzz: true,
-    name: "",
-    key: ""
-};
-
-const ADMIN_PASSWORD = "chonka1"; //FIXME
+//this function should initialize a room for quiz bowl
+function createRoom() {
+    rooms.push({
+        id: rooms.length,
+        players: [],
+        buzzer: {
+            canBuzz: true,
+            name: "",
+            key: ""
+        }
+    });
+}
 
 //socket.io
 const options = {
     pingInterval: 2000,
     pingTimeout: 5000
 };
+
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
+
+    socket.on("create", data => {
+        socket.join(rooms[data.room].id);
+    });
+
     socket.on("login", data => {
-        players.push(data);
-        io.emit("login", players);
+        rooms[data.room].players.push(data);
+        socket.join(rooms[data.room].id);
+        io.in(data.room).emit("login", rooms[data.room].players);
     });
 
     socket.on("buzz", data => {
-        buzzer = {
+        rooms[data.room].buzzer = {
             canBuzz: false,
             name: data.name,
             key: data.key
         };
-        io.emit("buzz", buzzer);
+        io.in(data.room).emit("buzz", rooms[data.room].buzzer);
     });
 
+    //admin only functions
     socket.on("clear", data => {
-        buzzer = {
+        rooms[data.room].buzzer = {
             canBuzz: true,
             name: "",
             key: ""
         };
-        io.emit("clear", buzzer);
+        io.in(data.room).emit("clear", rooms[data.room].buzzer);
     });
 
     //reset all variables, the game must return to its starting state
-    socket.on("reset", () => {
-        buzzer = {
+    socket.on("reset", data => {
+        rooms[data.room].buzzer = {
             canBuzz: true,
             name: "",
             key: ""
         };
-        players = [];
-        io.emit("clear", buzzer);
-        io.emit("login", players);
+        rooms[data.room].players = [];
+        io.in(data.room).emit("clear", rooms[data.room].buzzer);
+        io.in(data.room).emit("login", rooms[data.room].players);
     });
 
     socket.on("disconnect", () => {
         let index = -1;
-        for(let i = 0; i < players.length; ++i){
-            if(players[i].key === socket.id){
-                index = i;
+        //search for room of player
+        let room = -1;
+        for (let i = 0; i < rooms.length; ++i) {
+            for (let j = 0; j < rooms[i].players.length; ++j) {
+                if (rooms[i].players[j].key === socket.id) {
+                    room = i;
+                    index = j;
+                }
             }
         }
+
         if (index >= 0) {
-            players.splice(index, 1);
+            rooms[room].players[index].disconnected = true;
         }
-        io.emit("disconnect", players);
+
+        if (room >= 0) {
+            io.in(room).emit("disconnect", rooms[room].players);
+        }
     });
 });
 
+//API request to create a room
+app.get("/api/room", (req, res) => {
+    let newRoomID = rooms.length;
+    createRoom();
+    res.status(200).send({ id: newRoomID });
+});
+
 //initial api requests
-app.get("/api/players", (req, res) => {
-    res.status(200).send(players);
+app.get("/api/players/:room", (req, res) => {
+    res.status(200).send(rooms[req.params.room].players);
 });
 
-app.get("/api/buzzer", (req, res) => {
-    res.status(200).send(buzzer);
-});
-
-app.post("/api/admin", (req, res) => {
-    if(req.body.password===ADMIN_PASSWORD){
-        return res.status(200).send("yes");
-    }else{
-        return res.status(200).send("no");
-    }
+app.get("/api/buzzer/:room", (req, res) => {
+    res.status(200).send(rooms[req.params.room].buzzer);
 });
 
 // Handles any requests that don"t match the ones above
