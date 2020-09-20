@@ -23,9 +23,8 @@ The default proxy port is 8085, but you can change this in client/package.json a
 - [ ] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)
 - [x] Highlight the team that has buzzed (makes bonuses easier)
 - [ ] Add disconnect button for users (allows name change)
-- [ ] Improve admin page (need to implement socket.io namespaces)
 - [ ] Create data component as parent to ```Admin``` and ```Game```
-- [ ] Support multiple simultaneous instances (socket.io rooms)
+- [x] Support multiple simultaneous instances (socket.io rooms)
 - [ ] Add toggle teams feature
 - [x] Improve handling of user disconnects
 - [ ] Allow admins to remove players
