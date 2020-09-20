@@ -33,11 +33,11 @@ const options = {
 
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
-    console.log(socket.rooms);
 
     socket.on("login", data => {
-        players.push(data);
-        io.emit("login", players);
+        rooms[data.room].players.push(data);
+        socket.join(data.room);
+        io.to(data.room).emit("login", players);
     });
 
     socket.on("buzz", data => {
@@ -51,16 +51,24 @@ io.on("connection", socket => {
 
     socket.on("disconnect", () => {
         let index = -1;
-        let players = rooms[socket.rooms[1]].players;
-        for (let i = 0; i < players.length; ++i) {
-            if (players[i].key === socket.id) {
-                index = i;
+        //search for room of player
+        let room = -1;
+        for (let i = 0; i < rooms.length; ++i) {
+            for (let j = 0; j < rooms[i].players.length; ++j) {
+                if (players[i].key === socket.id) {
+                    room = i;
+                    index = j;
+                }
             }
         }
+
         if (index >= 0) {
-            players[index].disconnected = true;
+            rooms[room].players[index].disconnected = true;
         }
-        io.emit("disconnect", players);
+
+        if (room >= 0) {
+            io.to(room).emit("disconnect", rooms[room].players);
+        }
     });
 });
 
