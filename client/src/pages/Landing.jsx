@@ -6,7 +6,7 @@ const Landing = () => {
         <div className="App">
             <Link to="/create">Create a Game</Link>
             <br></br>
-            <Link to="/game">Join a Game</Link>
+            <Link to="/join">Join a Game</Link>
         </div>
     );
 }

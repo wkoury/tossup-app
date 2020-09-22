@@ -32,7 +32,7 @@ class Admin extends React.Component {
                 room: res.data.id
             });
 
-            this.socket.emit("create", { room: res.data.id })
+            this.socket.emit("create", { id: res.data.id })
         });
 
 
@@ -81,11 +81,11 @@ class Admin extends React.Component {
     }
 
     handleClear = () => {
-        this.socket.emit("clear", { room: this.state.room });
+        this.socket.emit("clear", { id: this.state.room });
     }
 
     handleReset = () => {
-        this.socket.emit("reset", { room: this.state.room });
+        this.socket.emit("reset", { id: this.state.room });
     }
 
     render() {
@@ -103,9 +103,9 @@ class Admin extends React.Component {
                     </React.Fragment>
                 )}
                 <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
-                <div className="footer">
+                {/* <div className="footer">
                     <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
-                </div>
+                </div> */}
             </div>
         );
     }

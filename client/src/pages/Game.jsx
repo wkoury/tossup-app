@@ -1,16 +1,16 @@
 import React from "react";
-import axios from "axios";
 import io from "socket.io-client";
+import axios from "axios";
 import Players from "../components/Players";
 import "../App.css";
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            room: "",
-            name: "",
-            login: false,
+            room: props.room,
+            name: props.name,
             players: [],
             canBuzz: true,
             whoBuzzed: {
@@ -21,12 +21,33 @@ class Game extends React.Component {
 
         this.socket = io();
 
-        this.handleLogin = this.handleLogin.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.handleBuzz = this.handleBuzz.bind(this);
     }
 
     componentDidMount() {
+        axios.get(`/api/players/${this.state.room}`).then(res => {
+            this.setState({
+                players: res.data
+            });
+        });
+
+        axios.get(`/api/buzzer/${this.state.room}`).then(res => {
+            this.setState({
+                canBuzz: res.data.canBuzz,
+                whoBuzzed: {
+                    name: res.data.name,
+                    key: res.data.key
+                }
+            });
+        });
+
+        this.socket.emit("login", {
+            name: this.state.name,
+            key: this.socket.id,
+            room: this.state.room,
+            disconnected: false
+        });
+
         //listen for other users to log on
         this.socket.on("login", data => {
             this.setState({
@@ -74,72 +95,6 @@ class Game extends React.Component {
         });
     }
 
-    handleChange = event => {
-        event.preventDefault();
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-    }
-
-        
-
-    handleLogin = (event) => {
-        event.preventDefault();
-
-        if (this.state.name.length >= 25) {
-            alert("The name you entered is too long!");
-            this.setState({
-                name: ""
-            });
-            return;
-        }
-
-        axios.get(`/api/rooms/${this.state.room}`).then(res => {
-            if(res.data === "DNE"){
-                alert("That room does not exist!");
-                this.setState({
-                    room: ""
-                });
-                return false;
-            }else{
-                if (this.state.name !== "" && this.state.room !== "") {
-                    this.setState({
-                        login: true
-                    });
-                    this.socket.emit("login",
-                        {
-                            name: this.state.name,
-                            key: this.socket.id,
-                            room: this.state.room,
-                            disconnected: false
-                        },
-                        () => {/* callback function */ });
-                }
-    
-                localStorage.setItem("player", JSON.stringify({
-                    name: this.state.name,
-                    key: this.socket.id
-                }));
-    
-                axios.get(`/api/players/${this.state.room}`).then(res => {
-                    this.setState({
-                        players: res.data
-                    });
-                });
-    
-                axios.get(`/api/buzzer/${this.state.room}`).then(res => {
-                    this.setState({
-                        canBuzz: res.data.canBuzz,
-                        whoBuzzed: {
-                            name: res.data.name,
-                            key: res.data.key
-                        }
-                    });
-                });
-            }
-        });
-    }
-
     handleBuzz = event => {
         event.preventDefault();
         this.socket.emit("buzz",
@@ -155,49 +110,18 @@ class Game extends React.Component {
 
         return (
             <div className="App">
-                {this.state.login === false ? (
-                    <div className="initialization">
-                        <h4>Enter your room & name:</h4>
-                        <div className="form-fields">
-                            <input
-                                className="room-input"
-                                type="text"
-                                placeholder="Room ID"
-                                name="room"
-                                value={this.state.room}
-                                onChange={e => this.handleChange(e)}
-                            ></input>
-                            <br></br>
-                            <input
-                                className="name-input"
-                                type="text"
-                                placeholder="Name"
-                                name="name"
-                                value={this.state.name}
-                                onChange={e => this.handleChange(e)}
-                            ></input>
-                            <button
-                                className="name-submit"
-                                onClick={(e) => this.handleLogin(e)}
-                            >
-                                Join
-                    </button>
-                        </div>
+                <div>
+                    <div className="room">
+                        <p>Game Room:</p>
+                        <h2>{this.state.room}</h2>
                     </div>
-                ) : (
-                        <div>
-                            <div className="room">
-                                <p>Game Room:</p>
-                                <h2>{this.state.room}</h2>
-                            </div>
-                            {this.state.canBuzz ? (<div>
-                                <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
-                            </div>) : (
-                                    <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
-                                )}
-                            <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
-                        </div>
-                    )}
+                    {this.state.canBuzz ? (<div>
+                        <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
+                    </div>) : (
+                            <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
+                        )}
+                    <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
+                </div>
             </div>
         );
     }
