@@ -2,6 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Players from "../components/Players";
+import { withRouter } from "react-router-dom";
 import "../App.css";
 
 class Admin extends React.Component {
@@ -14,7 +15,7 @@ class Admin extends React.Component {
             players: [],
             whoBuzzed: {
                 name: "",
-                key: ""
+                playerID: ""
             }
         };
 
@@ -25,6 +26,14 @@ class Admin extends React.Component {
         this.handleReset = this.handleReset.bind(this);
     }
 
+    authenticate = () => {
+        axios.get(`/api/rooms/${this.state.room}`).then(res => {
+            if(res.data === "DNE"){
+                this.props.history.push("/");
+            }
+        }).catch(e => this.props.history.push("/"));
+    }
+
     componentDidMount() {
         //this should initialize a room
         axios.get("/api/room").then(res => {
@@ -33,7 +42,7 @@ class Admin extends React.Component {
             });
 
             this.socket.emit("create", { id: res.data.id })
-        });
+        }).catch(e => this.props.history.push("/"));
 
 
         //listen for other users to log on
@@ -57,7 +66,7 @@ class Admin extends React.Component {
                 canBuzz: false,
                 whoBuzzed: {
                     name: data.name,
-                    key: data.key
+                    playerID: data.playerID
                 }
             });
         });
@@ -67,7 +76,7 @@ class Admin extends React.Component {
                 canBuzz: true,
                 whoBuzzed: {
                     name: data.name,
-                    key: data.key
+                    playerID: data.playerID
                 }
             });
         });
@@ -89,7 +98,6 @@ class Admin extends React.Component {
     }
 
     render() {
-        console.log(this.state.players);
         return (
             <div className="App">
                 <div className="room">
@@ -111,4 +119,4 @@ class Admin extends React.Component {
     }
 }
 
-export default Admin;
+export default withRouter(Admin);

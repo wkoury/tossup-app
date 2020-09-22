@@ -2,60 +2,71 @@ import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Players from "../components/Players";
+import { withRouter } from "react-router-dom";
 import "../App.css";
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
 
+        this.socket = io();
+
         this.state = {
+            playerID: this.socket.id,
             room: props.room,
             name: props.name,
             players: [],
             canBuzz: true,
             whoBuzzed: {
                 name: "",
-                key: ""
+                playerID: ""
             }
         };
 
-        this.socket = io();
-
         this.handleBuzz = this.handleBuzz.bind(this);
+        this.authenticate = this.authenticate.bind(this);
+        this.initializePlayer = this.initializePlayer.bind(this);
+    }
+
+    authenticate = () => {
+        axios.get(`/api/rooms/${this.state.room}`).then(res => {
+            if(res.data === "DNE"){
+                this.props.history.push("/");
+            }
+        }).catch(e => this.props.history.push("/"));
     }
 
     componentDidMount() {
+
+        if(this.props.room === "" || this.props.name === ""){
+            this.props.history.push("/");
+            return null;
+        }
+        
+        this.authenticate();
+
         axios.get(`/api/players/${this.state.room}`).then(res => {
             this.setState({
                 players: res.data
             });
-        });
+        }).catch(e => this.props.history.push("/"));
 
         axios.get(`/api/buzzer/${this.state.room}`).then(res => {
             this.setState({
                 canBuzz: res.data.canBuzz,
                 whoBuzzed: {
                     name: res.data.name,
-                    key: res.data.key
+                    playerID: res.data.key
                 }
             });
-        });
-
-        this.socket.emit("login", {
-            name: this.state.name,
-            key: this.socket.id,
-            room: this.state.room,
-            disconnected: false
-        });
+        }).catch(e => this.props.history.push("/"));
 
         //listen for other users to log on
         this.socket.on("login", data => {
+            console.log(data);
             this.setState({
                 players: data
             });
-            if (data.length === 0) {
-                this.setState({ login: false });
-            }
         });
 
         //listen for other users to log off
@@ -67,11 +78,12 @@ class Game extends React.Component {
 
         //listen for other users to buzz
         this.socket.on("buzz", data => {
+            console.log(data.playerID);
             this.setState({
                 canBuzz: false,
                 whoBuzzed: {
                     name: data.name,
-                    key: this.socket.id
+                    playerID: data.playerID
                 }
             });
         });
@@ -82,7 +94,7 @@ class Game extends React.Component {
                 canBuzz: true,
                 whoBuzzed: {
                     name: data.name,
-                    key: data.key
+                    playerID: data.playerID
                 }
             });
         });
@@ -93,21 +105,32 @@ class Game extends React.Component {
                 players: data
             });
         });
+
+        this.initializePlayer();
+    }
+
+    initializePlayer = () => {
+        this.socket.emit("login", {
+            name: this.state.name,
+            playerID: this.state.playerID,
+            id: this.state.room,
+            disconnected: false
+        });
     }
 
     handleBuzz = event => {
-        event.preventDefault();
+        console.log(this.state.playerID);
+
         this.socket.emit("buzz",
             {
                 name: this.state.name,
-                key: this.socket.id,
-                room: this.state.room
+                playerID: this.state.playerID,
+                id: this.state.room
             },
             () => {/* callback function */ });
     }
 
     render() {
-
         return (
             <div className="App">
                 <div>
@@ -127,4 +150,4 @@ class Game extends React.Component {
     }
 }
 
-export default Game;
+export default withRouter(Game);

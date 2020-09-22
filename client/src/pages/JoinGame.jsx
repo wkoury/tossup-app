@@ -45,12 +45,10 @@ class JoinGame extends React.Component {
                     this.props.setName(this.state.name);
                     this.props.setRoom(this.state.room);
 
-                    const roomLink = `/game/${this.state.room}`;   
+                    const roomLink = "/game";   
                     this.props.history.push(roomLink);
                 }
-            });
-
-            
+            });            
         }
     }
 
