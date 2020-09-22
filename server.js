@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
-app.use(bodyParser.json());
-
+var id = require("nodejs-unique-numeric-id-generator");
+const { Socket } = require("dgram");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -14,15 +14,30 @@ let rooms = [];
 
 //this function should initialize a room for quiz bowl
 function createRoom() {
-    rooms.push({
-        id: rooms.length,
+    let room = {
+        id: id.generate(new Date().toJSON()),
         players: [],
         buzzer: {
             canBuzz: true,
             name: "",
             key: ""
         }
+    }
+
+    rooms.push(room);
+
+    return room;
+}
+
+function searchRooms(id){
+    let index = -1;
+    rooms.forEach(room => {
+        if(room.id === id){
+            index = rooms.indexOf(room);
+        }
     });
+
+    return index;
 }
 
 //socket.io
@@ -35,47 +50,54 @@ const io = require("socket.io")(server, options);
 io.on("connection", socket => {
 
     socket.on("create", data => {
-        socket.join(rooms[data.room].id);
+        socket.join(rooms[searchRooms(data.id)].id);
     });
 
     socket.on("login", data => {
-        rooms[data.room].players.push(data);
-        socket.join(rooms[data.room].id);
-        io.in(data.room).emit("login", rooms[data.room].players);
+        console.log(data);
+        data.playerID = socket.id;
+        if(searchRooms(data.id) > 0){
+            rooms[searchRooms(data.id)].players.push(data);
+            socket.join(rooms[searchRooms(data.id)].id);
+            io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
+        }
     });
 
     socket.on("buzz", data => {
-        rooms[data.room].buzzer = {
+        console.log(data.playerID);
+        console.log(data.playerID, " has buzzed");
+        rooms[searchRooms(data.id)].buzzer = {
             canBuzz: false,
             name: data.name,
-            key: data.key
+            playerID: data.playerID
         };
-        io.in(data.room).emit("buzz", rooms[data.room].buzzer);
+        io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
     });
 
     //admin only functions
     socket.on("clear", data => {
-        rooms[data.room].buzzer = {
+        rooms[searchRooms(data.id)].buzzer = {
             canBuzz: true,
             name: "",
-            key: ""
+            playerID: ""
         };
-        io.in(data.room).emit("clear", rooms[data.room].buzzer);
+        io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
     });
 
     //reset all variables, the game must return to its starting state
     socket.on("reset", data => {
-        rooms[data.room].buzzer = {
+        rooms[searchRooms(data.id)].buzzer = {
             canBuzz: true,
             name: "",
-            key: ""
+            playerID: ""
         };
-        rooms[data.room].players = [];
-        io.in(data.room).emit("clear", rooms[data.room].buzzer);
-        io.in(data.room).emit("login", rooms[data.room].players);
+        rooms[searchRooms(data.id)].players = [];
+        io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
+        io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
     });
 
     socket.on("disconnect", () => {
+        console.log("disco");
         let index = -1;
         //search for room of player
         let room = -1;
@@ -93,15 +115,16 @@ io.on("connection", socket => {
         }
 
         if (room >= 0) {
-            io.in(room).emit("disconnect", rooms[room].players);
+            io.in(rooms[room].id).emit("disconnect", rooms[room].players);
         }
+
+        rooms.forEach(room => console.log(room.players));
     });
 });
 
 //API request to create a room
 app.get("/api/room", (req, res) => {
-    let newRoomID = rooms.length;
-    createRoom();
+    let newRoomID = createRoom().id;
     res.status(200).send({ id: newRoomID });
 });
 
@@ -110,7 +133,6 @@ app.get("/api/rooms/:room", (req, res) => {
     let found = false;
 
     rooms.forEach(room => {
-        console.log(room.id);
         if(+room.id === +req.params.room){ //+ converts to number type
             found = true;
             res.status(200).send("OK");
@@ -124,11 +146,11 @@ app.get("/api/rooms/:room", (req, res) => {
 
 //initial api requests
 app.get("/api/players/:room", (req, res) => {
-    res.status(200).send(rooms[req.params.room].players);
+    res.status(200).send(rooms[searchRooms(req.params.room)].players);
 });
 
 app.get("/api/buzzer/:room", (req, res) => {
-    res.status(200).send(rooms[req.params.room].buzzer);
+    res.status(200).send(rooms[searchRooms(req.params.room)].buzzer);
 });
 
 // Handles any requests that don"t match the ones above
