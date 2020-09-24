@@ -4,7 +4,6 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const { Socket } = require("dgram");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -54,22 +53,25 @@ io.on("connection", socket => {
     });
 
     socket.on("login", data => {
-        console.log(data);
-        data.playerID = socket.id;
-        if(searchRooms(data.id) > 0){
-            rooms[searchRooms(data.id)].players.push(data);
+        if(searchRooms(data.id) > -1){
+            let player = {
+                playerID: socket.id,
+                name: data.name,
+                disconnected: false,
+                id: data.id
+            };
+            console.log(player);
+            rooms[searchRooms(data.id)].players.push(player);
             socket.join(rooms[searchRooms(data.id)].id);
             io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
         }
     });
 
     socket.on("buzz", data => {
-        console.log(data.playerID);
-        console.log(data.playerID, " has buzzed");
         rooms[searchRooms(data.id)].buzzer = {
             canBuzz: false,
             name: data.name,
-            playerID: data.playerID
+            playerID: socket.id
         };
         io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
     });
@@ -96,14 +98,13 @@ io.on("connection", socket => {
         io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
     });
 
-    socket.on("disconnect", () => {
-        console.log("disco");
+    socket.on("disconnect", data => {
         let index = -1;
         //search for room of player
         let room = -1;
         for (let i = 0; i < rooms.length; ++i) {
             for (let j = 0; j < rooms[i].players.length; ++j) {
-                if (rooms[i].players[j].key === socket.id) {
+                if (rooms[i].players[j].playerID === socket.id) {
                     room = i;
                     index = j;
                 }

@@ -9,10 +9,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        this.socket = io();
-
         this.state = {
-            playerID: this.socket.id,
+            socket: io(),
             room: props.room,
             name: props.name,
             players: [],
@@ -37,7 +35,6 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-
         if(this.props.room === "" || this.props.name === ""){
             this.props.history.push("/");
             return null;
@@ -62,22 +59,21 @@ class Game extends React.Component {
         }).catch(e => this.props.history.push("/"));
 
         //listen for other users to log on
-        this.socket.on("login", data => {
-            console.log(data);
+        this.state.socket.on("login", data => {
             this.setState({
                 players: data
             });
         });
 
         //listen for other users to log off
-        this.socket.on("disconnect", data => {
+        this.state.socket.on("disconnect", data => {
             this.setState({
                 players: data
             });
         });
 
         //listen for other users to buzz
-        this.socket.on("buzz", data => {
+        this.state.socket.on("buzz", data => {
             console.log(data.playerID);
             this.setState({
                 canBuzz: false,
@@ -89,7 +85,7 @@ class Game extends React.Component {
         });
 
         //listen for buzzer to be cleared
-        this.socket.on("clear", data => {
+        this.state.socket.on("clear", data => {
             this.setState({
                 canBuzz: true,
                 whoBuzzed: {
@@ -100,7 +96,7 @@ class Game extends React.Component {
         });
 
         //on player disconnect
-        this.socket.on("disconnect", data => {
+        this.state.socket.on("disconnect", data => {
             this.setState({
                 players: data
             });
@@ -110,10 +106,10 @@ class Game extends React.Component {
     }
 
     initializePlayer = () => {
-        this.socket.emit("login", {
+        this.state.socket.emit("login", {
             name: this.state.name,
-            playerID: this.state.playerID,
             id: this.state.room,
+            playerID: this.state.socket.id,
             disconnected: false
         });
     }
@@ -121,13 +117,11 @@ class Game extends React.Component {
     handleBuzz = event => {
         console.log(this.state.playerID);
 
-        this.socket.emit("buzz",
+        this.state.socket.emit("buzz",
             {
                 name: this.state.name,
-                playerID: this.state.playerID,
                 id: this.state.room
-            },
-            () => {/* callback function */ });
+            });
     }
 
     render() {
