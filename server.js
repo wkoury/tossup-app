@@ -60,7 +60,6 @@ io.on("connection", socket => {
                 disconnected: false,
                 id: data.id
             };
-            console.log(player);
             rooms[searchRooms(data.id)].players.push(player);
             socket.join(rooms[searchRooms(data.id)].id);
             io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
@@ -118,8 +117,6 @@ io.on("connection", socket => {
         if (room >= 0) {
             io.in(rooms[room].id).emit("disconnect", rooms[room].players);
         }
-
-        rooms.forEach(room => console.log(room.players));
     });
 });
 

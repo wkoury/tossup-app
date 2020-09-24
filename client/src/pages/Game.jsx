@@ -74,7 +74,6 @@ class Game extends React.Component {
 
         //listen for other users to buzz
         this.state.socket.on("buzz", data => {
-            console.log(data.playerID);
             this.setState({
                 canBuzz: false,
                 whoBuzzed: {
@@ -115,8 +114,6 @@ class Game extends React.Component {
     }
 
     handleBuzz = event => {
-        console.log(this.state.playerID);
-
         this.state.socket.emit("buzz",
             {
                 name: this.state.name,

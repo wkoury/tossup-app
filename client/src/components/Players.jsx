@@ -47,8 +47,6 @@ class Players extends React.Component {
                 };
             }
 
-            console.log(index);
-
             const team1 = players.filter(player => players.indexOf(player) % 2 === 0);
             const team2 = players.filter(player => players.indexOf(player) % 2 !== 0);
             return (
