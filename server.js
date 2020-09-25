@@ -4,7 +4,6 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const { restart } = require("nodemon");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -49,7 +48,7 @@ const options = {
 
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
-    try{
+    try {
         socket.on("create", data => {
             socket.join(rooms[searchRooms(data.id)].id);
         });
@@ -123,20 +122,20 @@ io.on("connection", socket => {
                 io.in(rooms[room].id).emit("disconnect", rooms[room].players);
             }
         });
-    }catch(err) { console.error(err) }
+    } catch (err) { console.error(err) }
 });
 
 //API request to create a room
 app.get("/api/room/:type", (req, res) => {
-    if(req.params.type==="teams"){
+    if (req.params.type === "teams") {
         let newRoomID = createRoom("teams").id;
-        return res.status(200).send({ 
-            id: newRoomID, 
-            type: req.params.type 
+        return res.status(200).send({
+            id: newRoomID,
+            type: req.params.type
         });
-    }else if(req.params.type==="default"){
+    } else if (req.params.type === "default") {
         let newRoomID = createRoom("default").id;
-        return res.status(200).send({ 
+        return res.status(200).send({
             id: newRoomID,
             type: req.params.type
         });
@@ -145,47 +144,47 @@ app.get("/api/room/:type", (req, res) => {
 
 //get the room type
 app.get("/api/roomType/:room", (req, res) => {
-    try{
+    try {
         let index = searchRooms(req.params.room);
-        if(index > -1){
+        if (index > -1) {
             return res.status(200).send({
                 type: rooms[index].type
             });
-        }else{
+        } else {
             return res.status(200).send("DNE");
         }
-    }catch(err) {console.error(err) };
+    } catch (err) { console.error(err) };
 });
 
 //API request to see if a room exists
 app.get("/api/rooms/:room", (req, res) => {
-    try{
-    let found = false;
+    try {
+        let found = false;
 
-    rooms.forEach(room => {
-        if (+room.id === +req.params.room) { //+ converts to number type
-            found = true;
-            res.status(200).send("OK");
+        rooms.forEach(room => {
+            if (+room.id === +req.params.room) { //+ converts to number type
+                found = true;
+                res.status(200).send("OK");
+            }
+        });
+
+        if (found === false) {
+            res.status(200).send("DNE");
         }
-    });
-
-    if (found === false) {
-        res.status(200).send("DNE");
-    }
-    }catch(err) { console.error(err) }
+    } catch (err) { console.error(err) }
 });
 
 //initial api requests
 app.get("/api/players/:room", (req, res) => {
-    try{
+    try {
         res.status(200).send(rooms[searchRooms(req.params.room)].players);
-    }catch(err) { console.error(err) }
+    } catch (err) { console.error(err) }
 });
 
 app.get("/api/buzzer/:room", (req, res) => {
-    try{
+    try {
         res.status(200).send(rooms[searchRooms(req.params.room)].buzzer);
-    }catch(err) { console.error(err) }
+    } catch (err) { console.error(err) }
 });
 
 app.get("/api/health", (req, res) => { //for status pages
