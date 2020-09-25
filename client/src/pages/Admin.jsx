@@ -4,6 +4,7 @@ import axios from "axios";
 import Players from "../components/Players";
 import Teams from "../components/Teams";
 import { withRouter } from "react-router-dom";
+import buzzerSound from "../assets/ding.mp3";
 import "../App.css";
 
 class Admin extends React.Component {
@@ -37,6 +38,7 @@ class Admin extends React.Component {
     }
 
     componentDidMount() {
+
         //this should initialize a room
         const APIlink = `/api/room/${this.props.match.params.type}`
         axios.get(APIlink).then(res => {
@@ -73,6 +75,8 @@ class Admin extends React.Component {
                     playerID: data.playerID
                 }
             });
+            let sound = new Audio(buzzerSound);
+            sound.play(); 
         });
 
         this.socket.on("clear", data => {
@@ -103,7 +107,7 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <div className="App">
+            <div className="App" style={{ background: this.state.canBuzz ? "#333" : "red" }}>
                 <div className="room">
                     <p>Game Room:</p>
                     <h2>{this.state.room}</h2>
