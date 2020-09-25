@@ -1,6 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
+import Players from "../components/Players";
 import Teams from "../components/Teams";
 import { withRouter } from "react-router-dom";
 import "../App.css";
@@ -11,6 +12,7 @@ class Admin extends React.Component {
 
         this.state = {
             room: "",
+            type: "",
             canBuzz: true,
             players: [],
             whoBuzzed: {
@@ -36,9 +38,11 @@ class Admin extends React.Component {
 
     componentDidMount() {
         //this should initialize a room
-        axios.get("/api/room").then(res => {
+        const APIlink = `/api/room/${this.props.match.params.type}`
+        axios.get(APIlink).then(res => {
             this.setState({
-                room: res.data.id
+                room: res.data.id,
+                type: res.data.type
             });
 
             this.socket.emit("create", { id: res.data.id })
@@ -110,7 +114,8 @@ class Admin extends React.Component {
                         <p>{this.state.whoBuzzed.name} has buzzed.</p>
                     </React.Fragment>
                 )}
-                <Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
+                {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
                 {/* <div className="footer">
                     <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
                 </div> */}

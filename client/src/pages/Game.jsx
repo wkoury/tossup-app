@@ -2,6 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Teams from "../components/Teams";
+import Players from "../components/Players";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -12,6 +13,7 @@ class Game extends React.Component {
         this.state = {
             socket: io(),
             room: props.room,
+            type: "",
             name: props.name,
             players: [],
             canBuzz: true,
@@ -57,6 +59,12 @@ class Game extends React.Component {
                 }
             });
         }).catch(e => this.props.history.push("/"));
+
+        axios.get(`/api/roomType/${this.state.room}`).then(res => {
+            this.setState({
+                type: res.data.type
+            });
+        });
 
         //listen for other users to log on
         this.state.socket.on("login", data => {
@@ -134,7 +142,8 @@ class Game extends React.Component {
                     </div>) : (
                             <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                         )}
-                    <Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
+                    {this.state.type === "default" && (<Players players={this.state.players}/>)}
+                    {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
                 </div>
             </div>
         );

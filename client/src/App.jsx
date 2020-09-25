@@ -34,7 +34,7 @@ class App extends React.Component {
           <Route exact path="/" component={Landing} />
           <Route path="/join" component={() => <JoinGame setName={this.setName} setRoom={this.setRoom} />} />
           <Route exact path="/game" component={() => <Game name={this.state.name} room={this.state.room} />} />
-          <Route path="/admin" component={Admin} />
+          <Route path="/admin/:type" component={Admin} />
           <Route path="/create" component={CreateGame} />
           <Redirect to="/" />
         </Switch>

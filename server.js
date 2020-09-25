@@ -13,9 +13,10 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 let rooms = [];
 
 //this function should initialize a room for quiz bowl
-function createRoom() {
+function createRoom(type) {
     let room = {
         id: id.generate(new Date().toJSON()),
+        type: type,
         players: [],
         buzzer: {
             canBuzz: true,
@@ -125,10 +126,34 @@ io.on("connection", socket => {
 });
 
 //API request to create a room
-app.get("/api/room", (req, res) => {
-    let newRoomID = createRoom().id;
-    res.status(200).send({ id: newRoomID });
+app.get("/api/room/:type", (req, res) => {
+    if(req.params.type==="teams"){
+        let newRoomID = createRoom("teams").id;
+        return res.status(200).send({ 
+            id: newRoomID, 
+            type: req.params.type 
+        });
+    }else if(req.params.type==="default"){
+        let newRoomID = createRoom("default").id;
+        return res.status(200).send({ 
+            id: newRoomID,
+            type: req.params.type
+        });
+    }
 });
+
+app.get("/api/roomType/:room", (req, res) => {
+    let index = searchRooms(req.params.room);
+    if(index > -1){
+        return res.status(200).send({
+            type: rooms[index].type
+        });
+    }else{
+        return res.status(200).send("DNE");
+    }
+
+    return;
+})
 
 //API request to see if a room exists
 app.get("/api/rooms/:room", (req, res) => {

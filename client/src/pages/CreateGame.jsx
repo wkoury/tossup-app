@@ -8,9 +8,9 @@ import { Link } from "react-router-dom";
 const CreateGame = () => {
     return (
         <div className="App">
-            {/* <Link>No Teams</Link> */}
+            <Link to="/admin/default">No Teams</Link>
             <br></br>
-            <Link to="/admin">Random Teams</Link> {/* FIXME we need to change this a ton */}
+            <Link to="/admin/teams">Random Teams</Link> {/* FIXME we need to change this a ton */}
             <br></br>
             {/* <Link>Selected Teams</Link> */}
         </div>
