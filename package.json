@@ -8,7 +8,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "heroku-postbuild": "cd client && npm i && npm run build",
+    "dev": "nodemon server.js",
+    "heroku-postbuild": "npm i && cd client && npm i && npm run build",
     "build": "cd client && npm run build",
     "test": "cd client && npm i && npm test && npm run build"
   },
@@ -21,5 +22,7 @@
     "nodejs-unique-numeric-id-generator": "^1.0.1",
     "socket.io": "^2.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
