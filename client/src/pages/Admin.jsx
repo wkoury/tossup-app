@@ -53,7 +53,6 @@ class Admin extends React.Component {
 
         //listen for other users to log on
         this.socket.on("login", data => {
-            console.log(data);
             this.setState({
                 players: data
             });
