@@ -4,6 +4,7 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
+const { restart } = require("nodemon");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -152,6 +153,10 @@ app.get("/api/players/:room", (req, res) => {
 
 app.get("/api/buzzer/:room", (req, res) => {
     res.status(200).send(rooms[searchRooms(req.params.room)].buzzer);
+});
+
+app.get("/api/health", (req, res) => { //for status pages
+    res.status(200).send("OK");
 });
 
 // Handles any requests that don"t match the ones above
