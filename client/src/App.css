@@ -16,6 +16,21 @@ body {
   color: white;
 }
 
+.landing {
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  position: inline;
+  margin: 0 auto;
+  width: 700px;
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  padding-top: 0px;
+  padding-bottom: 70px;
+}
+
 .App-link {
   color: #61dafb;
 }
