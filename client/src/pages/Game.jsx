@@ -1,7 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
-import Players from "../components/Players";
+import Teams from "../components/Teams";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -134,7 +134,7 @@ class Game extends React.Component {
                     </div>) : (
                             <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                         )}
-                    <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
+                    <Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
                 </div>
             </div>
         );

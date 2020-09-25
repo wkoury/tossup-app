@@ -1,7 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
-import Players from "../components/Players";
+import Teams from "../components/Teams";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -110,7 +110,7 @@ class Admin extends React.Component {
                         <p>{this.state.whoBuzzed.name} has buzzed.</p>
                     </React.Fragment>
                 )}
-                <Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
+                <Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />
                 {/* <div className="footer">
                     <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
                 </div> */}
