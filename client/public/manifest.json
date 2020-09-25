@@ -1,6 +1,6 @@
 {
-  "short_name": "Buzzer",
-  "name": "Quiz Bowl Online Buzzer System",
+  "short_name": "Tossup",
+  "name": "Tossup",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",

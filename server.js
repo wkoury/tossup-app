@@ -1,5 +1,5 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
@@ -28,10 +28,10 @@ function createRoom() {
     return room;
 }
 
-function searchRooms(id){
+function searchRooms(id) {
     let index = -1;
     rooms.forEach(room => {
-        if(room.id === id){
+        if (room.id === id) {
             index = rooms.indexOf(room);
         }
     });
@@ -53,7 +53,7 @@ io.on("connection", socket => {
     });
 
     socket.on("login", data => {
-        if(searchRooms(data.id) > -1){
+        if (searchRooms(data.id) > -1) {
             let player = {
                 playerID: socket.id,
                 name: data.name,
@@ -67,12 +67,15 @@ io.on("connection", socket => {
     });
 
     socket.on("buzz", data => {
-        rooms[searchRooms(data.id)].buzzer = {
-            canBuzz: false,
-            name: data.name,
-            playerID: socket.id
-        };
-        io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
+        let tempRoom = searchRooms(data.id);
+        if (rooms[tempRoom].buzzer.canBuzz = true) {
+            rooms[tempRoom].buzzer = {
+                canBuzz: false,
+                name: data.name,
+                playerID: socket.id
+            };
+            io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
+        }
     });
 
     //admin only functions
@@ -131,13 +134,13 @@ app.get("/api/rooms/:room", (req, res) => {
     let found = false;
 
     rooms.forEach(room => {
-        if(+room.id === +req.params.room){ //+ converts to number type
+        if (+room.id === +req.params.room) { //+ converts to number type
             found = true;
             res.status(200).send("OK");
         }
     });
 
-    if(found === false){
+    if (found === false) {
         res.status(200).send("DNE");
     }
 });
