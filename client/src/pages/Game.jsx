@@ -1,8 +1,8 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
-import Teams from "../components/Teams";
-import Players from "../components/Players";
+// import Teams from "../components/Teams";
+// import Players from "../components/Players";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -30,18 +30,18 @@ class Game extends React.Component {
 
     authenticate = () => {
         axios.get(`/api/rooms/${this.state.room}`).then(res => {
-            if(res.data === "DNE"){
+            if (res.data === "DNE") {
                 this.props.history.push("/");
             }
         }).catch(e => this.props.history.push("/"));
     }
 
     componentDidMount() {
-        if(this.props.room === "" || this.props.name === ""){
+        if (this.props.room === "" || this.props.name === "") {
             this.props.history.push("/");
             return null;
         }
-        
+
         this.authenticate();
 
         axios.get(`/api/players/${this.state.room}`).then(res => {
@@ -142,8 +142,8 @@ class Game extends React.Component {
                     </div>) : (
                             <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                         )}
-                    {this.state.type === "default" && (<Players players={this.state.players}/>)}
-                    {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {/* {this.state.type === "default" && (<Players players={this.state.players}/>)} */}
+                    {/* {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)} */}
                 </div>
             </div>
         );
