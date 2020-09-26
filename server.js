@@ -69,7 +69,7 @@ io.on("connection", socket => {
 
         socket.on("buzz", data => {
             let tempRoom = searchRooms(data.id);
-            if (rooms[tempRoom].buzzer.canBuzz = true) {
+            if (rooms[tempRoom].buzzer.canBuzz === true) {
                 rooms[tempRoom].buzzer = {
                     canBuzz: false,
                     name: data.name,
