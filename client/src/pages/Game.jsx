@@ -140,13 +140,6 @@ class Game extends React.Component {
                             <p>Game Room:</p>
                             <h2>{this.state.room}</h2>
                         </div>
-                        {this.state.canBuzz ? (<div>
-                            <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
-                        </div>) : (
-                                <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
-                            )}
-                        {/* {this.state.type === "default" && (<Players players={this.state.players} />)} */}
-                        {/* {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)} */}
                     </div>
                     {this.state.canBuzz ? (<div>
                         <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>
