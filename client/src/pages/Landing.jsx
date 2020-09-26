@@ -9,6 +9,7 @@ const Landing = () => {
             <Link to="/create">Create a Game</Link>
             <br></br>
             <Link to="/join">Join a Game</Link>
+            <p className="byline">Created by <a href="https://wkoury.com" rel="noopener noreferrer" target="_blank">Will Koury</a>.</p>
         </div>
     );
 }

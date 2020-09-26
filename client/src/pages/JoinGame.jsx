@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 import { withRouter } from "react-router-dom";
 
 class JoinGame extends React.Component {
@@ -54,36 +55,39 @@ class JoinGame extends React.Component {
 
     render() {
         return(
-            <div className="App">
-                <div className="initialization">
-                        <h4>Enter your room ID & name:</h4>
-                        <div className="form-fields">
-                            <input
-                                className="room-input"
-                                type="text"
-                                placeholder="Room ID"
-                                name="room"
-                                value={this.state.room}
-                                onChange={e => this.handleChange(e)}
-                            ></input>
-                            <br></br>
-                            <input
-                                className="name-input"
-                                type="text"
-                                placeholder="Name"
-                                name="name"
-                                value={this.state.name}
-                                onChange={e => this.handleChange(e)}
-                            ></input>
-                            <button
-                                className="name-submit"
-                                onClick={(e) => this.handleLogin(e)}
-                            >
-                                Join
-                    </button>
+            <React.Fragment>
+                <Navbar />
+                <div className="App">
+                    <div className="initialization">
+                            <h4>Enter your room ID & name:</h4>
+                            <div className="form-fields">
+                                <input
+                                    className="room-input"
+                                    type="text"
+                                    placeholder="Room ID"
+                                    name="room"
+                                    value={this.state.room}
+                                    onChange={e => this.handleChange(e)}
+                                ></input>
+                                <br></br>
+                                <input
+                                    className="name-input"
+                                    type="text"
+                                    placeholder="Name"
+                                    name="name"
+                                    value={this.state.name}
+                                    onChange={e => this.handleChange(e)}
+                                ></input>
+                                <button
+                                    className="name-submit"
+                                    onClick={(e) => this.handleLogin(e)}
+                                >
+                                    Join
+                        </button>
+                            </div>
                         </div>
-                    </div>
-            </div>
+                </div>
+            </React.Fragment>
         );
     }
 }
