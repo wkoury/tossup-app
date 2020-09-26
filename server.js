@@ -43,7 +43,7 @@ function searchRooms(id) {
 //socket.io
 const options = {
     pingInterval: 2000,
-    pingTimeout: 30000 //how many seconds before disconnect
+    pingTimeout: 10000 //how many seconds before disconnect, we need to keep this somewhat low as an anti-cheating measure
 };
 
 const io = require("socket.io")(server, options);
