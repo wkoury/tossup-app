@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import Players from "../components/Players";
 import Teams from "../components/Teams";
+import Navbar from "../components/Navbar";
 import { withRouter } from "react-router-dom";
 import buzzerSound from "../assets/ding.mp3";
 import "../App.css";
@@ -106,23 +107,26 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <div className="App" style={{ background: this.state.canBuzz ? "#333" : "red" }}>
-                <div className="room">
-                    <p>Game Room:</p>
-                    <h2>{this.state.room}</h2>
+            <React.Fragment>
+                <Navbar />
+                <div className="App" style={{ background: this.state.canBuzz ? "#333" : "red" }}>
+                    <div className="room">
+                        <p>Game Room:</p>
+                        <h2>{this.state.room}</h2>
+                    </div>
+                    {!this.state.canBuzz && (
+                        <React.Fragment>
+                            <button className="clear" onClick={e => this.handleClear(e)}>Clear Buzzer</button>
+                            <p>{this.state.whoBuzzed.name} has buzzed.</p>
+                        </React.Fragment>
+                    )}
+                    {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {/* <div className="footer">
+                        <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
+                    </div> */}
                 </div>
-                {!this.state.canBuzz && (
-                    <React.Fragment>
-                        <button className="clear" onClick={e => this.handleClear(e)}>Clear Buzzer</button>
-                        <p>{this.state.whoBuzzed.name} has buzzed.</p>
-                    </React.Fragment>
-                )}
-                {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
-                {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
-                {/* <div className="footer">
-                    <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
-                </div> */}
-            </div>
+            </React.Fragment>
         );
     }
 }

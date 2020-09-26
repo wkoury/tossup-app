@@ -5,6 +5,7 @@ import Admin from "./pages/Admin";
 import Landing from "./pages/Landing";
 import CreateGame from "./pages/CreateGame";
 import JoinGame from "./pages/JoinGame";
+import About from "./pages/About";
 import "./App.css";
 
 class App extends React.Component {
@@ -36,6 +37,7 @@ class App extends React.Component {
           <Route exact path="/game" component={() => <Game name={this.state.name} room={this.state.room} />} />
           <Route path="/admin/:type" component={Admin} />
           <Route path="/create" component={CreateGame} />
+          <Route path="/about" component={About} />
           <Redirect to="/" />
         </Switch>
       </Router>

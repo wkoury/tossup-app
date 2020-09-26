@@ -21,8 +21,16 @@ body {
 
 .subtitle {
   font-size: 1.4rem;
-  padding-top: 0px;
   padding-bottom: 70px;
+}
+
+.byline {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .App-link {
@@ -98,4 +106,14 @@ body {
 
 a, a:visited {
   color: lightcoral;
+}
+
+.navbar {
+  position: fixed;
+  padding: 10px;
+  font-size: 2.5rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
 }
