@@ -21,8 +21,17 @@ class Game extends React.Component {
             whoBuzzed: {
                 name: "",
                 playerID: ""
-            }
+            },
+            disconnected: false
         };
+        
+        setInterval(() => { //every half second, check to see if the socket is still connected
+            if(!this.state.socket.connected){
+                this.setState({
+                    disconnected: true
+                });
+            }
+        }, 500);
 
         this.handleBuzz = this.handleBuzz.bind(this);
         this.authenticate = this.authenticate.bind(this);
@@ -131,6 +140,16 @@ class Game extends React.Component {
     }
 
     render() {
+        if(this.state.disconnected){
+            return(
+                <React.Fragment>
+                    <Navbar />
+                    <div className="App">
+                        <h3>You were disconnected!</h3>
+                    </div>
+                </React.Fragment>
+            );
+        }
         return (
             <React.Fragment>
                 <Navbar />
