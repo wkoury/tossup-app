@@ -2,7 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Players from "../components/Players";
-import Teams from "../components/Teams";
+import RandomTeams from "../components/RandomTeams";
 import Navbar from "../components/Navbar";
 import { withRouter } from "react-router-dom";
 import buzzerSound from "../assets/ding.mp3";
@@ -121,7 +121,7 @@ class Admin extends React.Component {
                         </React.Fragment>
                     )}
                     {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
-                    {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {this.state.type === "teams" && (<RandomTeams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
                     {/* <div className="footer">
                         <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
                     </div> */}

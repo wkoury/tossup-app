@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-class Teams extends React.Component {
+class RandomTeams extends React.Component {
 
     render() {
         const { players, whoBuzzed } = this.props;
@@ -67,4 +67,4 @@ class Teams extends React.Component {
     }
 }
 
-export default Teams;
+export default RandomTeams;
