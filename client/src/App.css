@@ -1,5 +1,5 @@
 body {
-  background: #333;
+  background: #1502FF;
 }
 
 .App {
@@ -61,13 +61,13 @@ body {
 }
 
 .buzzer {
-  width: 120px;
-  height: 60px;
-  border: none;
+  width: 300px;
+  height: 300px;
   font-size: 1.5rem;
-  border-radius: 5px;
+  border-radius: 99999px;
   color: white;
-  background: #61dafb;
+  background: darkred;
+  border: 5px solid black;
 }
 
 .clear {
@@ -77,7 +77,7 @@ body {
   font-size: 1.5rem;
   border-radius: 5px;
   color: white;
-  background: #61dafb;
+  background: red;
 }
 
 .column{
@@ -93,19 +93,8 @@ body {
   width: 100%;
 }
 
-.reset {
-  margin-top: 100px;
-  width: 120px;
-  height: 50px;
-  border: none;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  color: white;
-  background: red;
-}
-
 a, a:visited {
-  color: lightcoral;
+  color: #F67280;
 }
 
 .navbar {
