@@ -6,6 +6,7 @@ import Landing from "./pages/Landing";
 import CreateGame from "./pages/CreateGame";
 import JoinGame from "./pages/JoinGame";
 import About from "./pages/About";
+import Dashboard from "./pages/Dashboard";
 import "./App.css";
 
 class App extends React.Component {
@@ -38,6 +39,7 @@ class App extends React.Component {
           <Route path="/admin/:type" component={Admin} />
           <Route path="/create" component={CreateGame} />
           <Route path="/about" component={About} />
+          <Route path="/dash" component={Dashboard} />
           <Redirect to="/" />
         </Switch>
       </Router>
