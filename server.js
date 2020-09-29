@@ -4,6 +4,7 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
+const { send } = require("process");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -15,6 +16,7 @@ let rooms = [];
 function createRoom(type) {
     let room = {
         id: id.generate(new Date().toJSON()),
+        adminID: "",
         type: type,
         players: [],
         buzzer: {
@@ -27,6 +29,12 @@ function createRoom(type) {
     rooms.push(room);
 
     return room;
+}
+
+function destroyRoom(index){
+    if(index >= 0){
+        rooms.splice(index);
+    }
 }
 
 function searchRooms(id) {
@@ -50,7 +58,9 @@ const io = require("socket.io")(server, options);
 io.on("connection", socket => {
     try {
         socket.on("create", data => {
-            socket.join(rooms[searchRooms(data.id)].id);
+            let index = searchRooms(data.id);
+            socket.join(rooms[index].id);
+            rooms[index].adminID = socket.id;
         });
 
         socket.on("login", data => {
@@ -114,12 +124,31 @@ io.on("connection", socket => {
                 }
             }
 
+            for(let i = 0; i < rooms.length; ++i) {
+                if(rooms[i].adminID === socket.id) {
+                    room = i;
+                }
+            }
+
             if (index >= 0) {
                 rooms[room].players[index].disconnected = true;
             }
 
             if (room >= 0) {
                 io.in(rooms[room].id).emit("disconnect", rooms[room].players);
+                
+                let gameOver = true;
+                rooms[room].players.forEach(player => {
+                    if(player.disconnected === false){
+                        gameOver = false;
+                    }
+                });
+                if(gameOver){
+                    setTimeout(() => {
+                        //destroy the room...
+                        destroyRoom(room);
+                    }, (5 * 60 * 1000)); //...in 5 minutes. (5 * 60 * 10000)ms
+                }
             }
         });
     } catch (err) { console.error(err) }
@@ -140,6 +169,12 @@ app.get("/api/room/:type", (req, res) => {
             type: req.params.type
         });
     }
+});
+
+app.get("/api/roomCount", (req, res) => {
+    return res.status(200).send({
+        count: rooms.length
+    });
 });
 
 //get the room type

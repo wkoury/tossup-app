@@ -131,6 +131,10 @@ class Game extends React.Component {
         });
     }
 
+    componentWillUnmount(){
+        this.state.socket.disconnect();
+    }
+
     handleBuzz = event => {
         this.state.socket.emit("buzz",
             {

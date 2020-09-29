@@ -90,6 +90,10 @@ class Admin extends React.Component {
         });
     }
 
+    componentWillUnmount(){
+        this.socket.disconnect();
+    }
+
     handleChange = event => {
         event.preventDefault();
         this.setState({
@@ -109,7 +113,7 @@ class Admin extends React.Component {
         return (
             <React.Fragment>
                 <Navbar />
-                <div className="App" style={{ background: this.state.canBuzz ? "#333" : "red" }}>
+                <div className="App">
                     <div className="room">
                         <p>Game Room:</p>
                         <h2>{this.state.room}</h2>
@@ -122,9 +126,6 @@ class Admin extends React.Component {
                     )}
                     {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
                     {this.state.type === "teams" && (<RandomTeams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
-                    {/* <div className="footer">
-                        <button className="reset" onClick={e => this.handleReset(e)}>Reset Game</button>
-                    </div> */}
                 </div>
             </React.Fragment>
         );
