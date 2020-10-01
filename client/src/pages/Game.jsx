@@ -121,7 +121,11 @@ class Game extends React.Component {
 
         this.initializePlayer();
 
-        window.addEventListener("keydown", e => this.handleBuzz(e));
+        document.addEventListener("keydown", e => {
+            if(e.code === "Space"){
+                this.handleBuzz(e);
+            }
+        });
     }
 
     initializePlayer = () => {
@@ -134,7 +138,6 @@ class Game extends React.Component {
     }
 
     componentWillUnmount(){
-        window.removeEventListener("keydown", e => this.handleBuzz(e));
         this.state.socket.disconnect();
     }
 
