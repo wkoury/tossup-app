@@ -88,6 +88,12 @@ class Admin extends React.Component {
                 }
             });
         });
+
+        document.addEventListener("keydown", e => {
+            if(e.code === "Space"){
+                this.handleClear();
+            }
+        });
     }
 
     componentWillUnmount(){
