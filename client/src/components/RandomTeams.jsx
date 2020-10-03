@@ -9,36 +9,36 @@ class RandomTeams extends React.Component {
         let index = -1;
 
         if (Array.isArray(players)) {
-            if(players.length === 0) return null;
+            if (players.length === 0) return null;
 
-            players.forEach(player => {            
-                if(player.playerID===whoBuzzed.playerID){
+            players.forEach(player => {
+                if (player.playerID === whoBuzzed.playerID) {
                     index = players.indexOf(player);
                 }
             });
 
 
-            if(index % 2 === 0){
+            if (index % 2 === 0) {
                 team1Style = {
-                    color: "yellow"
+                    color: "orange"
                 };
-            }else{
+            } else {
                 team1Style = {
                     color: "white"
                 };
             }
 
-            if(index % 2 !== 0){
+            if (index % 2 !== 0) {
                 team2Style = {
-                    color: "yellow"
+                    color: "orange"
                 };
-            }else{
+            } else {
                 team2Style = {
                     color: "white"
                 };
             }
 
-            if(index ===-1){
+            if (index === -1) {
                 team1Style = {
                     color: "white"
                 };
