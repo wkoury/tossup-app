@@ -4,6 +4,7 @@ import axios from "axios";
 // import Teams from "../components/Teams";
 // import Players from "../components/Players";
 import Navbar from "../components/Navbar";
+import RandomTeams from "../components/RandomTeams";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -24,9 +25,9 @@ class Game extends React.Component {
             },
             disconnected: false
         };
-        
+
         setInterval(() => { //every half second, check to see if the socket is still connected
-            if(!this.state.socket.connected){
+            if (!this.state.socket.connected) {
                 this.setState({
                     disconnected: true
                 });
@@ -122,7 +123,7 @@ class Game extends React.Component {
         this.initializePlayer();
 
         document.addEventListener("keydown", e => {
-            if(e.code === "Space"){
+            if (e.code === "Space") {
                 this.handleBuzz(e);
             }
         });
@@ -137,7 +138,7 @@ class Game extends React.Component {
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.state.socket.disconnect();
     }
 
@@ -150,8 +151,8 @@ class Game extends React.Component {
     }
 
     render() {
-        if(this.state.disconnected){
-            return(
+        if (this.state.disconnected) {
+            return (
                 <React.Fragment>
                     <Navbar />
                     <div className="App">
@@ -176,7 +177,7 @@ class Game extends React.Component {
                             <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                         )}
                     {/* {this.state.type === "default" && (<Players players={this.state.players}/>)} */}
-                    {/* {this.state.type === "teams" && (<Teams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)} */}
+                    {this.state.type === "teams" && (<RandomTeams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
                 </div>
             </React.Fragment >
         );
