@@ -155,7 +155,7 @@ io.on("connection", socket => {
                         if (gameOver2) { //we need to check this twice because this can accidentally be triggered on game start
                             destroyRoom(room);
                         }
-                    }, (1)); //...in 5 minutes. (5 * 60 * 10000)ms
+                    }, (60 * 60 * 1000)); //...in 60 minutes. (60 * 60 * 10000)ms
                 }
             }
         });
