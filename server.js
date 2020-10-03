@@ -31,8 +31,8 @@ function createRoom(type) {
     return room;
 }
 
-function destroyRoom(index){
-    if(index >= 0){
+function destroyRoom(index) {
+    if (index >= 0) {
         rooms.splice(index);
     }
 }
@@ -124,8 +124,8 @@ io.on("connection", socket => {
                 }
             }
 
-            for(let i = 0; i < rooms.length; ++i) {
-                if(rooms[i].adminID === socket.id) {
+            for (let i = 0; i < rooms.length; ++i) {
+                if (rooms[i].adminID === socket.id) {
                     room = i;
                 }
             }
@@ -136,18 +136,26 @@ io.on("connection", socket => {
 
             if (room >= 0) {
                 io.in(rooms[room].id).emit("disconnect", rooms[room].players);
-                
+
                 let gameOver = true;
                 rooms[room].players.forEach(player => {
-                    if(player.disconnected === false){
+                    if (player.disconnected === false) {
                         gameOver = false;
                     }
                 });
-                if(gameOver){
+                if (gameOver) {
                     setTimeout(() => {
                         //destroy the room...
-                        destroyRoom(room);
-                    }, (5 * 60 * 1000)); //...in 5 minutes. (5 * 60 * 10000)ms
+                        let gameOver2 = true;
+                        rooms[room].players.forEach(player => {
+                            if (player.disconnected === false) {
+                                gameOver2 = false;
+                            }
+                        });
+                        if (gameOver2) { //we need to check this twice because this can accidentally be triggered on game start
+                            destroyRoom(room);
+                        }
+                    }, (1)); //...in 5 minutes. (5 * 60 * 10000)ms
                 }
             }
         });
