@@ -4,7 +4,6 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const { send } = require("process");
 const port = process.env.PORT || 8085;
 
 app.use(express.static(path.join(__dirname, "./client/build")));
