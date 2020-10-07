@@ -11,10 +11,10 @@
     "dev": "nodemon server.js",
     "heroku-postbuild": "npm i && cd client && npm i && npm run build",
     "build": "cd client && npm run build",
-    "test": "cd client && npm i && npm test && npm run build"
+    "test": "cd client && npm i && npm test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["buzzer", "quiz bowl", "academic bowl", "academic", "online", "easy"],
+  "author": "Will Koury",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
