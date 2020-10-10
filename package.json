@@ -13,7 +13,14 @@
     "build": "cd client && npm run build",
     "test": "cd client && npm i && npm test"
   },
-  "keywords": ["buzzer", "quiz bowl", "academic bowl", "academic", "online", "easy"],
+  "keywords": [
+    "buzzer",
+    "quiz bowl",
+    "academic bowl",
+    "academic",
+    "online",
+    "easy"
+  ],
   "author": "Will Koury",
   "license": "ISC",
   "dependencies": {

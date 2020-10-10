@@ -120,6 +120,12 @@ class Game extends React.Component {
             });
         });
 
+        this.state.socket.on("kill", () => {
+            this.setState({
+                disconnected: true
+            });
+        })
+
         this.initializePlayer();
 
         document.addEventListener("keydown", e => {

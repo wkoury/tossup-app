@@ -122,41 +122,21 @@ io.on("connection", socket => {
             }
         }
 
-        console.log("disconnect");
-
-        for (let i = 0; i < rooms.length; ++i) {
-            if (rooms[i].adminID === socket.id) {
-                room = i;
-            }
-        }
-
         if (index >= 0) {
             rooms[room].players[index].disconnected = true;
         }
 
         if (room >= 0) {
             io.in(rooms[room].id).emit("disconnect", rooms[room].players);
+        }
 
-            // let gameOver = true;
-            // rooms[room].players.forEach(player => {
-            //     if (player.disconnected === false) {
-            //         gameOver = false;
-            //     }
-            // });
-            // if (gameOver) {
-            //     setTimeout(() => {
-            //         //destroy the room...
-            //         let gameOver2 = true;
-            //         rooms[room].players.forEach(player => {
-            //             if (player.disconnected === false) {
-            //                 gameOver2 = false;
-            //             }
-            //         });
-            //         if (gameOver2) { //we need to check this twice because this can accidentally be triggered on game start
-            //             destroyRoom(room);
-            //         }
-            //     }, (60 * 60 * 1000)); //...in 60 minutes. (60 * 60 * 10000)ms
-            // }
+        for (let i = 0; i < rooms.length; ++i) {
+            if (rooms[i].adminID === socket.id) {
+                room = i;
+                io.in(rooms[room].id).emit("kill", rooms[room].players);
+                destroyRoom(room);
+                console.log(`Room ${room} destroyed.`);
+            }
         }
     });
 });
