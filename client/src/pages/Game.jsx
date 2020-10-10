@@ -124,7 +124,7 @@ class Game extends React.Component {
             this.setState({
                 disconnected: true
             });
-        })
+        });
 
         this.initializePlayer();
 

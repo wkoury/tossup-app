@@ -133,9 +133,8 @@ io.on("connection", socket => {
         for (let i = 0; i < rooms.length; ++i) {
             if (rooms[i].adminID === socket.id) {
                 room = i;
-                io.in(rooms[room].id).emit("kill", rooms[room].players);
+                io.in(rooms[room].id).emit("kill");
                 destroyRoom(room);
-                console.log(`Room ${room} destroyed.`);
             }
         }
     });
