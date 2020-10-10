@@ -49,95 +49,96 @@ function searchRooms(id) {
 
 //socket.io
 const options = {
-    pingInterval: 500,
-    pingTimeout: 10000 //how many seconds before disconnect, we need to keep this somewhat low as an anti-cheating measure
+    pingInterval: 1000,
+    pingTimeout: 60000
 };
 
 const io = require("socket.io")(server, options);
 io.on("connection", socket => {
-    try {
-        socket.on("create", data => {
-            let index = searchRooms(data.id);
-            socket.join(rooms[index].id);
-            rooms[index].adminID = socket.id;
-        });
+    socket.on("create", data => {
+        let index = searchRooms(data.id);
+        socket.join(rooms[index].id);
+        rooms[index].adminID = socket.id;
+    });
 
-        socket.on("login", data => {
-            if (searchRooms(data.id) > -1) {
-                let player = {
-                    playerID: socket.id,
-                    name: data.name,
-                    disconnected: false,
-                    id: data.id
-                };
-                rooms[searchRooms(data.id)].players.push(player);
-                socket.join(rooms[searchRooms(data.id)].id);
-                io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
-            }
-        });
-
-        socket.on("buzz", data => {
-            let tempRoom = searchRooms(data.id);
-            if (rooms[tempRoom].buzzer.canBuzz === true) {
-                rooms[tempRoom].buzzer = {
-                    canBuzz: false,
-                    name: data.name,
-                    playerID: socket.id
-                };
-                io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
-            }
-        });
-
-        //admin only functions
-        socket.on("clear", data => {
-            rooms[searchRooms(data.id)].buzzer = {
-                canBuzz: true,
-                name: "",
-                playerID: ""
+    socket.on("login", data => {
+        if (searchRooms(data.id) > -1) {
+            let player = {
+                playerID: socket.id,
+                name: data.name,
+                disconnected: false,
+                id: data.id
             };
-            io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
-        });
-
-        //reset all variables, the game must return to its starting state
-        socket.on("reset", data => {
-            rooms[searchRooms(data.id)].buzzer = {
-                canBuzz: true,
-                name: "",
-                playerID: ""
-            };
-            rooms[searchRooms(data.id)].players = [];
-            io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
+            rooms[searchRooms(data.id)].players.push(player);
+            socket.join(rooms[searchRooms(data.id)].id);
             io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
-        });
+        }
+    });
 
-        socket.on("disconnect", data => {
-            let index = -1;
-            //search for room of player
-            let room = -1;
-            for (let i = 0; i < rooms.length; ++i) {
-                for (let j = 0; j < rooms[i].players.length; ++j) {
-                    if (rooms[i].players[j].playerID === socket.id) {
-                        room = i;
-                        index = j;
-                    }
-                }
-            }
+    socket.on("buzz", data => {
+        let tempRoom = searchRooms(data.id);
+        if (rooms[tempRoom].buzzer.canBuzz === true) {
+            rooms[tempRoom].buzzer = {
+                canBuzz: false,
+                name: data.name,
+                playerID: socket.id
+            };
+            io.in(data.id).emit("buzz", rooms[searchRooms(data.id)].buzzer);
+        }
+    });
 
-            for (let i = 0; i < rooms.length; ++i) {
-                if (rooms[i].adminID === socket.id) {
+    //admin only functions
+    socket.on("clear", data => {
+        rooms[searchRooms(data.id)].buzzer = {
+            canBuzz: true,
+            name: "",
+            playerID: ""
+        };
+        io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
+    });
+
+    //reset all variables, the game must return to its starting state
+    socket.on("reset", data => {
+        rooms[searchRooms(data.id)].buzzer = {
+            canBuzz: true,
+            name: "",
+            playerID: ""
+        };
+        rooms[searchRooms(data.id)].players = [];
+        io.in(data.id).emit("clear", rooms[searchRooms(data.id)].buzzer);
+        io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
+    });
+
+    socket.on("disconnect", data => {
+        let index = -1;
+        //search for room of player
+        let room = -1;
+        for (let i = 0; i < rooms.length; ++i) {
+            for (let j = 0; j < rooms[i].players.length; ++j) {
+                if (rooms[i].players[j].playerID === socket.id) {
                     room = i;
+                    index = j;
                 }
             }
+        }
 
-            if (index >= 0) {
-                rooms[room].players[index].disconnected = true;
-            }
+        if (index >= 0) {
+            rooms[room].players[index].disconnected = true;
+        }
 
-            if (room >= 0) {
-                io.in(rooms[room].id).emit("disconnect", rooms[room].players);
+        if (room >= 0) {
+            io.in(rooms[room].id).emit("disconnect", rooms[room].players);
+        }
+
+        for (let i = 0; i < rooms.length; ++i) {
+            if (rooms[i].adminID === socket.id) {
+                room = i;
+                io.in(rooms[room].id).emit("kill", rooms[room].players);
+                destroyRoom(room);
+                console.log(`Room ${room} destroyed.`);
             }
-        });
-    } catch (err) { console.error(err) }
+        }
+    });
 });
 
 //API request to create a room
