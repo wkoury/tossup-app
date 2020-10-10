@@ -33,7 +33,7 @@ class Dashboard extends React.Component {
             <React.Fragment>
                 <Navbar />
                 <div className="App">
-                    <h3>Active rooms:</h3>
+                    <h3>Open rooms:</h3>
                     <p>{this.state.roomCount}</p>
                 </div>
             </React.Fragment>
