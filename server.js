@@ -135,27 +135,6 @@ io.on("connection", socket => {
 
             if (room >= 0) {
                 io.in(rooms[room].id).emit("disconnect", rooms[room].players);
-
-                let gameOver = true;
-                rooms[room].players.forEach(player => {
-                    if (player.disconnected === false) {
-                        gameOver = false;
-                    }
-                });
-                if (gameOver) {
-                    setTimeout(() => {
-                        //destroy the room...
-                        let gameOver2 = true;
-                        rooms[room].players.forEach(player => {
-                            if (player.disconnected === false) {
-                                gameOver2 = false;
-                            }
-                        });
-                        if (gameOver2) { //we need to check this twice because this can accidentally be triggered on game start
-                            destroyRoom(room);
-                        }
-                    }, (60 * 60 * 1000)); //...in 60 minutes. (60 * 60 * 10000)ms
-                }
             }
         });
     } catch (err) { console.error(err) }
