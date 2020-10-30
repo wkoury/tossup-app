@@ -22,6 +22,10 @@ function createRoom(type) {
             canBuzz: true,
             name: "",
             key: ""
+        },
+        score: {
+            team1: 0,
+            team2: 0
         }
     }
 
@@ -109,6 +113,12 @@ io.on("connection", socket => {
         io.in(data.id).emit("login", rooms[searchRooms(data.id)].players);
     });
 
+    socket.on("score", data => {
+        rooms[searchRooms(data.id)].team1Score = data.team1Score;
+        rooms[searchRooms(data.id)].team2Score = data.team2Score;
+        io.in(data.id).emit("score", roooms[searchRooms(data.id)].score);
+    });
+
     socket.on("disconnect", data => {
         let index = -1;
         //search for room of player
@@ -155,6 +165,23 @@ app.get("/api/room/:type", (req, res) => {
             type: req.params.type
         });
     }
+});
+
+app.get("/api/score/:room", (req, res) => {
+    try{
+        let index = searchRooms(req.params.room);
+        if (index > -1){
+            return res.status(200).send({
+                team1Score: rooms[index].score.team1,
+                team2Score: rooms[index].score.team2
+            });
+        }else{
+            return res.status(200).send({
+                team1Score: "",
+                team2Score: ""
+            });
+        }
+    } catch(err){ console.error(err); }
 });
 
 app.get("/api/roomCount", (req, res) => {
