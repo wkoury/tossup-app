@@ -66,12 +66,12 @@ class RandomTeams extends React.Component {
             return (
                 <div className="row">
                     <div className="column left" style={team1Style}>
-                        {canControlScore ? <input type="number" name="team1Score" onChange={e => this.handleChange(e)}></input> : <h6>{team1Score}</h6>}
+                        {canControlScore ? <input type="number" className="score-input" name="team1Score" value={team1Score} onChange={e => this.handleChange(e)}></input> : <h6>{team1Score}</h6>}
                         <h5>Team 1</h5>
                         {team1.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>
                     <div className="column right" style={team2Style}>
-                        {canControlScore ? <input type="number" name="team2Score" onChange={e => this.handleChange(e)}></input> : <h6>{team2Score}</h6>}
+                        {canControlScore ? <input type="number" className="score-input" name="team2Score" value={team2Score} onChange={e => this.handleChange(e)}></input> : <h6>{team2Score}</h6>}
                         <h5>Team 2</h5>
                         {team2.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>
