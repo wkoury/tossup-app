@@ -114,9 +114,9 @@ io.on("connection", socket => {
     });
 
     socket.on("score", data => {
-        rooms[searchRooms(data.id)].team1Score = data.team1Score;
-        rooms[searchRooms(data.id)].team2Score = data.team2Score;
-        io.in(data.id).emit("score", roooms[searchRooms(data.id)].score);
+        rooms[searchRooms(data.id)].score.team1 = data.team1;
+        rooms[searchRooms(data.id)].score.team2 = data.team2;
+        io.in(data.id).emit("score", rooms[searchRooms(data.id)].score);
     });
 
     socket.on("disconnect", data => {

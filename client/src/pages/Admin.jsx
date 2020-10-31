@@ -20,7 +20,9 @@ class Admin extends React.Component {
             whoBuzzed: {
                 name: "",
                 playerID: ""
-            }
+            },
+            team1Score: 0,
+            team2Score: 0
         };
 
         this.socket = io();
@@ -28,6 +30,8 @@ class Admin extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleClear = this.handleClear.bind(this);
         this.handleReset = this.handleReset.bind(this);
+        this.updateTeam1Score = this.updateTeam1Score.bind(this);
+        this.updateTeam2Score = this.updateTeam2Score.bind(this);
     }
 
     authenticate = () => {
@@ -36,6 +40,23 @@ class Admin extends React.Component {
                 this.props.history.push("/");
             }
         }).catch(e => this.props.history.push("/"));
+    }
+
+    updateTeam1Score = score => {
+        console.log("Updating team 1 score in parent");
+        this.setState({
+            team1Score: score
+        });
+
+        this.socket.emit("score", { id: this.state.room, team1: score, team2: this.state.team2Score });
+    }
+
+    updateTeam2Score = score => {
+        this.setState({
+            team2Score: score
+        });
+
+        this.socket.emit("score", { id: this.state.room, team1: this.state.team1Score, team2: score });
     }
 
     componentDidMount() {
@@ -126,12 +147,22 @@ class Admin extends React.Component {
                     </div>
                     {!this.state.canBuzz && (
                         <React.Fragment>
-                            <button className="clear" onClick={e => this.handleClear(e)}>Clear Buzzer</button>
+                            <button className="clear" onClick={e => this.handleClear(e)}>Clear</button>
                             <p>{this.state.whoBuzzed.name} has buzzed.</p>
                         </React.Fragment>
                     )}
                     {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
-                    {this.state.type === "teams" && (<RandomTeams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {this.state.type === "teams" && (
+                        <RandomTeams 
+                            players={this.state.players} 
+                            whoBuzzed={this.state.whoBuzzed}
+                            team1Score={this.state.team1Score}
+                            team2Score={this.state.team2Score}
+                            canControlScore={true} 
+                            updateTeam1Score={this.updateTeam1Score}
+                            updateTeam2Score={this.updateTeam2Score}
+                        />
+                    )}
                 </div>
             </React.Fragment>
         );

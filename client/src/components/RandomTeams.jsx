@@ -2,9 +2,23 @@ import React from "react";
 import "../App.css";
 
 class RandomTeams extends React.Component {
+    constructor(props){
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange = event => {
+        if(event.target.name === "team1Score"){
+            this.props.updateTeam1Score(event.target.value);
+        }
+
+        if(event.target.name === "team2Score"){
+            this.props.updateTeam2Score(event.target.value);
+        }
+    }
 
     render() {
-        const { players, whoBuzzed } = this.props;
+        const { players, whoBuzzed, canControlScore, team1Score, team2Score } = this.props;
         let team1Style, team2Style;
         let index = -1;
 
@@ -52,10 +66,12 @@ class RandomTeams extends React.Component {
             return (
                 <div className="row">
                     <div className="column left" style={team1Style}>
+                        {canControlScore ? <input type="number" name="team1Score" onChange={e => this.handleChange(e)}></input> : <h6>{team1Score}</h6>}
                         <h5>Team 1</h5>
                         {team1.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>
                     <div className="column right" style={team2Style}>
+                        {canControlScore ? <input type="number" name="team2Score" onChange={e => this.handleChange(e)}></input> : <h6>{team2Score}</h6>}
                         <h5>Team 2</h5>
                         {team2.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
                     </div>

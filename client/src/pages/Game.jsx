@@ -23,7 +23,9 @@ class Game extends React.Component {
                 name: "",
                 playerID: ""
             },
-            disconnected: false
+            disconnected: false,
+            team1Score: "",
+            team2Score: ""
         };
 
         setInterval(() => { //every half second, check to see if the socket is still connected
@@ -75,6 +77,14 @@ class Game extends React.Component {
             this.setState({
                 type: res.data.type
             });
+            if(res.data.type === "teams"){
+                axios.get(`/api/score/${this.state.room}`).then(res => {
+                    this.setState({
+                        team1Score: res.data.team1Score,
+                        team2Score: res.data.team2Score
+                    });
+                });
+            }
         });
 
         //listen for other users to log on
@@ -110,6 +120,13 @@ class Game extends React.Component {
                     name: data.name,
                     playerID: data.playerID
                 }
+            });
+        });
+
+        this.state.socket.on("score", data => {
+            this.setState({
+                team1Score: data.team1,
+                team2Score: data.team2
             });
         });
 
@@ -183,7 +200,15 @@ class Game extends React.Component {
                             <h4>{this.state.whoBuzzed.name} has buzzed.</h4>
                         )}
                     {/* {this.state.type === "default" && (<Players players={this.state.players}/>)} */}
-                    {this.state.type === "teams" && (<RandomTeams players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {this.state.type === "teams" && (
+                        <RandomTeams 
+                            players={this.state.players} 
+                            whoBuzzed={this.state.whoBuzzed} 
+                            team1Score={this.state.team1Score}
+                            team2Score={this.state.team2Score}
+                            canControlScore={false}
+                        />
+                    )}
                 </div>
             </React.Fragment >
         );
