@@ -95,6 +95,10 @@ body {
   border: 5px solid black;
 }
 
+.buzzer:hover {
+  border: 7px solid black;
+}
+
 .clear {
   width: 120px;
   height: 60px;
