@@ -11,7 +11,8 @@
     "dev": "nodemon server.js",
     "heroku-postbuild": "npm i && cd client && npm i && npm run build",
     "build": "cd client && npm run build",
-    "test": "cd client && npm i && npm test"
+    "test": "cd client && npm i && npm test",
+    "b": "node test.js"
   },
   "keywords": [
     "buzzer",
@@ -27,6 +28,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "nodejs-unique-numeric-id-generator": "^1.0.1",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
