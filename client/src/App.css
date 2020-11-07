@@ -31,10 +31,7 @@ body {
   width: 100%;
   text-align: center;
   font-size: 0.9rem;
-}
-
-.App-link {
-  color: #61dafb;
+  padding-bottom: 20px;
 }
 
 .name-input {
@@ -154,4 +151,8 @@ a:hover{
   left: 0;
   width: 100%;
   text-align: center;
+}
+
+.about {
+  font-size: 1.2rem;
 }
