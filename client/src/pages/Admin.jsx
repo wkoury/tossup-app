@@ -139,7 +139,7 @@ class Admin extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Navbar />
+                <Navbar needsLessMargin={true}/>
                 <div className="App">
                     <div className="room">
                         <p>Game Room:</p>

@@ -186,7 +186,7 @@ class Game extends React.Component {
         }
         return (
             <React.Fragment>
-                <Navbar />
+                <Navbar needsLessMargin={true}/>
                 <div className="App">
                     <div>
                         <div className="room">
