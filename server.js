@@ -144,6 +144,7 @@ io.on("connection", socket => {
             if (rooms[i].adminID === socket.id) {
                 io.in(rooms[i].id).emit("kill");
                 setTimeout(() => destroyRoom(i),5000);
+                break; //exit the loop after the game is found to increase efficiency of linear search
             }
         }
     });
