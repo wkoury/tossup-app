@@ -48,6 +48,7 @@ body {
   text-align: center;
   padding-left: 0px;
   padding-bottom: 12px;
+  margin-bottom: 20px;
   border-width: 0px 0px 1px;
   border-style: solid;
   border-color: darkgray;
@@ -61,7 +62,8 @@ body {
   width: 100%;
   height: auto;
   font-size: 24px;
-  text-align: left;
+  text-align: center;
+  margin-bottom: 20px;
   padding-left: 0px;
   padding-bottom: 12px;
   border-width: 0px 0px 1px;
