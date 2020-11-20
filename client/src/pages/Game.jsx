@@ -5,6 +5,7 @@ import axios from "axios";
 // import Players from "../components/Players";
 import Navbar from "../components/Navbar";
 import RandomTeams from "../components/RandomTeams";
+import Room from "../components/Room";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -189,10 +190,7 @@ class Game extends React.Component {
                 <Navbar needsLessMargin={true}/>
                 <div className="App">
                     <div>
-                        <div className="room">
-                            <p>Game Room:</p>
-                            <h2>{this.state.room}</h2>
-                        </div>
+                        <Room room={this.state.room}/>
                     </div>
                     {this.state.canBuzz ? (<div>
                         <button className="buzzer" onClick={e => this.handleBuzz(e)}>Buzz</button>

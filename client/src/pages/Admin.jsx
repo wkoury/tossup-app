@@ -4,6 +4,7 @@ import axios from "axios";
 import Players from "../components/Players";
 import RandomTeams from "../components/RandomTeams";
 import Navbar from "../components/Navbar";
+import Room from "../components/Room";
 import { withRouter } from "react-router-dom";
 import buzzerSound from "../assets/ding.mp3";
 import "../App.css";
@@ -141,10 +142,7 @@ class Admin extends React.Component {
             <React.Fragment>
                 <Navbar needsLessMargin={true}/>
                 <div className="App">
-                    <div className="room">
-                        <p>Game Room:</p>
-                        <h2>{this.state.room}</h2>
-                    </div>
+                    <Room room={this.state.room}/>
                     {!this.state.canBuzz && (
                         <React.Fragment>
                             <button className="clear" onClick={e => this.handleClear(e)}>Clear</button>
