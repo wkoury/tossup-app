@@ -45,6 +45,11 @@ class Dashboard extends React.Component {
                     {this.state.roomCount === "" ? <Loader type="ThreeDots" color="#FFFFFF" height={80} width={80} /> : <p>{this.state.roomCount}</p>}
 
                     <h3>Rooms created since last server restart:</h3>
+                    <span style={{
+                        fontSize: "0.7rem"
+                    }}>
+                        (The server is restarted nightly and when changes are pushed)
+                    </span>
                     {this.state.roomsCreated === "" ? <Loader type="ThreeDots" color="#FFFFFF" height={80} width={80} /> : <p>{this.state.roomsCreated}</p>}
                 </div>
             </React.Fragment>
