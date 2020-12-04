@@ -11,6 +11,9 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 //an array of the rooms created since the server was started
 let rooms = [];
 
+//the number of rooms created since the last server start
+let roomsCreated = 0;
+
 //this function should initialize a room for quiz bowl
 function createRoom(type) {
     let room = {
@@ -63,6 +66,7 @@ io.on("connection", socket => {
         let index = searchRooms(data.id);
         socket.join(rooms[index].id);
         rooms[index].adminID = socket.id;
+        roomsCreated++;
     });
 
     socket.on("login", data => {
@@ -187,6 +191,12 @@ app.get("/api/score/:room", (req, res) => {
 app.get("/api/roomCount", (req, res) => {
     return res.status(200).send({
         count: rooms.length
+    });
+});
+
+app.get("/api/roomsCreated", (req, res) => {
+    res.status(200).send({
+        count: roomsCreated
     });
 });
 

@@ -158,3 +158,8 @@ a:hover{
 .about {
   font-size: 1.2rem;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+}

@@ -8,23 +8,30 @@ class Dashboard extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            roomCount: ""
+            roomCount: "",
+            roomsCreated: ""
         };
 
-        this.getRoomCount = this.getRoomCount.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
     componentDidMount(){
-        this.getRoomCount();
+        this.getData();
         setInterval(() => {
-            this.getRoomCount();
+            this.getData();
         },5000);
     }
 
-    getRoomCount = () => {
+    getData = () => {
         axios.get("/api/roomCount").then(res => {
             this.setState({
                 roomCount: res.data.count
+            });
+        });
+
+        axios.get("/api/roomsCreated").then(res => {
+            this.setState({
+                roomsCreated: res.data.count
             });
         });
     }
@@ -36,6 +43,9 @@ class Dashboard extends React.Component {
                 <div className="App">
                     <h3>Open rooms:</h3>
                     {this.state.roomCount === "" ? <Loader type="ThreeDots" color="#FFFFFF" height={80} width={80} /> : <p>{this.state.roomCount}</p>}
+
+                    <h3>Rooms created since last server restart:</h3>
+                    {this.state.roomsCreated === "" ? <Loader type="ThreeDots" color="#FFFFFF" height={80} width={80} /> : <p>{this.state.roomsCreated}</p>}
                 </div>
             </React.Fragment>
         );
