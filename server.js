@@ -7,7 +7,7 @@ var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
 
 //LogRocket init boilerplate
-import LogRocket from "logrocket";
+const LogRocket = require("logrocket");
 LogRocket.init("ylk4sl/tossup-app");
 
 app.use(express.static(path.join(__dirname, "./client/build")));
