@@ -1,13 +1,11 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const port = process.env.PORT || 8085;
 
-app.use(helmet());
 app.use(express.static(path.join(__dirname, "./client/build")));
 
 //whether or not we should be printing things to the console
@@ -166,8 +164,7 @@ io.on("connection", socket => {
             if (rooms[i].adminID === socket.id) {
                 if(log) console.log("Destroying room ", rooms[i].id);
                 io.in(rooms[i].id).emit("kill");
-                setTimeout(() => destroyRoom(i),5000);
-                break; //exit the loop after the game is found to increase efficiency of linear search
+                setTimeout(() => { destroyRoom(i) },5000);
             }
         }
 
