@@ -6,11 +6,10 @@ const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
 
-//LogRocket init boilerplate
-const LogRocket = require("logrocket");
-LogRocket.init("ylk4sl/tossup-app");
-
 app.use(express.static(path.join(__dirname, "./client/build")));
+
+//whether or not we should be printing things to the console
+const log = true;
 
 //an array of the rooms created since the server was started
 let rooms = [];
@@ -36,7 +35,17 @@ function createRoom(type) {
         }
     }
 
+    if(log){
+        console.log("Creating a new room.");
+        console.log(room);
+    }
+
     rooms.push(room);
+
+    if(log){
+        console.log("Rooms array:");
+        console.log(rooms);
+    }
 
     return room;
 }
@@ -128,6 +137,9 @@ io.on("connection", socket => {
     });
 
     socket.on("disconnect", data => {
+        if(log){
+            console.log("Disconnect occurred.");
+        }
         let index = -1;
         //search for room of player
         let room = -1;
@@ -150,10 +162,16 @@ io.on("connection", socket => {
 
         for (let i = 0; i < rooms.length; ++i) {
             if (rooms[i].adminID === socket.id) {
+                if(log) console.log("Destroying room ", rooms[i].id);
                 io.in(rooms[i].id).emit("kill");
                 setTimeout(() => destroyRoom(i),5000);
                 break; //exit the loop after the game is found to increase efficiency of linear search
             }
+        }
+
+        if(log){
+            console.log("Rooms:");
+            console.log(rooms);
         }
     });
 });
