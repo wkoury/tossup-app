@@ -3,10 +3,8 @@ const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const helmet = require("helmet");
 const port = process.env.PORT || 8085;
 
-app.use(helmet());
 app.use(express.static(path.join(__dirname, "./client/build")));
 
 //whether or not we should be printing things to the console
