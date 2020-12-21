@@ -57,8 +57,17 @@ function destroyRoom(index) {
 }
 
 function searchRooms(id) {
+    if(log){
+        console.log("Searching for room ", id);
+        console.log("Rooms array:");
+        console.log(rooms);
+    }
     let index = -1;
     rooms.forEach(room => {
+        if(log){
+            console.log("Search id: ", id);
+            console.log("Room id at index ", rooms.indexOf(room), ": ", room.id);
+        }
         if (room.id === id) {
             index = rooms.indexOf(room);
         }
@@ -164,14 +173,17 @@ io.on("connection", socket => {
             if (rooms[i].adminID === socket.id) {
                 if(log) console.log("Destroying room ", rooms[i].id);
                 io.in(rooms[i].id).emit("kill");
-                setTimeout(() => { destroyRoom(i) },5000);
+                setTimeout(() => { 
+                    destroyRoom(i);
+                    if(log){
+                        console.log("Rooms:");
+                        console.log(rooms);
+                    }
+                },5000);
             }
         }
 
-        if(log){
-            console.log("Rooms:");
-            console.log(rooms);
-        }
+        
     });
 });
 
@@ -225,6 +237,10 @@ app.get("/api/roomsCreated", (req, res) => {
 app.get("/api/roomType/:room", (req, res) => {
     try {
         let index = searchRooms(req.params.room);
+        if(log){
+            console.log("Request to join room ", req.params.room);
+            console.log("Index: ", index);
+        }
         if (index > -1) {
             return res.status(200).send({
                 type: rooms[index].type
