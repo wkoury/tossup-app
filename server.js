@@ -52,6 +52,7 @@ function createRoom(type) {
 
 function destroyRoom(index) {
     if (index >= 0) {
+        io.in(rooms[index].id).emit("kill");
         rooms.splice(index);
     }
 }
@@ -172,14 +173,11 @@ io.on("connection", socket => {
         for (let i = 0; i < rooms.length; ++i) {
             if (rooms[i].adminID === socket.id) {
                 if(log) console.log("Destroying room ", rooms[i].id);
-                io.in(rooms[i].id).emit("kill");
-                setTimeout(() => { 
-                    destroyRoom(i);
-                    if(log){
-                        console.log("Rooms:");
-                        console.log(rooms);
-                    }
-                },5000);
+                destroyRoom(i);
+                if(log){
+                    console.log("Rooms:");
+                    console.log(rooms);
+                }
             }
         }
 
@@ -253,19 +251,15 @@ app.get("/api/roomType/:room", (req, res) => {
 
 //API request to see if a room exists
 app.get("/api/rooms/:room", (req, res) => {
+    if(log){
+        console.log("Request to join room ", req.params.room);
+    }
     try {
-        let found = false;
-
-        rooms.forEach(room => {
-            if (+room.id === +req.params.room) { //+ converts to number type
-                found = true;
-                res.status(200).send("OK");
-            }
-        });
-
-        if (found === false) {
-            res.status(200).send("DNE");
+        if(searchRooms(req.params.room) > -1){
+            res.status(200).send("OK");
         }
+
+        res.status(200).send("DNE");
     } catch (err) { console.error(err) }
 });
 
