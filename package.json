@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "dev": "nodemon server.js",
-    "build": "yarn ; cd client ; yarn ; yarn run build"
+    "build": "yarn ; cd client ; yarn ; yarn run build",
+    "test": "cd client ; yarn test"
   },
   "dependencies": {
     "express": "^4.17.1",
