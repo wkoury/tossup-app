@@ -28,6 +28,7 @@ class Game extends React.Component {
             team2Score: "",
             team1Name: "",
             team2Name: "",
+            canSwitchTeams: true
         };
 
         setInterval(() => { //every half second, check to see if the socket is still connected
@@ -100,7 +101,8 @@ class Game extends React.Component {
                 axios.get(`/api/names/${this.state.room}`).then(res => {
                     this.setState({
                         team1Name: res.data.team1Name,
-                        team2Name: res.data.team2Name
+                        team2Name: res.data.team2Name,
+                        canSwitchTeams: res.data.canSwitchTeams
                     });
                 });
             }
@@ -159,6 +161,12 @@ class Game extends React.Component {
         this.state.socket.on("switch", data => { 
             this.setState({
                 players: data
+            });
+        });
+
+        this.state.socket.on("lock", data => {
+            this.setState({
+                canSwitchTeams: data
             });
         });
 
@@ -248,6 +256,7 @@ class Game extends React.Component {
                             team2Name={this.state.team2Name}
                             canControlScore={false}
                             switchTeams={this.switchTeams}
+                            canSwitchTeams={this.state.canSwitchTeams}
                         />
                     )}
                 </div>

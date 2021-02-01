@@ -21,6 +21,7 @@ The default proxy port is 8085, but you can change this in client/package.json a
 
 # Progress
 - [ ] Allow admins to remove players
+- [ ] Implement Cypress for automated testing
 - [x] Add custom teams option
 - [x] Fix keystroke event listener
 - [x] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)

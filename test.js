@@ -1,3 +1,4 @@
+//TODO: switch this to Cypress
 const {Builder, By, Key, until} = require("selenium-webdriver");
 
 (async function example() {

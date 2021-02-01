@@ -35,7 +35,8 @@ function createRoom(type) {
         names: {
             team1: "Team 1",
             team2: "Team 2"
-        }
+        },
+        canSwitchTeams: true
     }
 
     if(log){
@@ -164,6 +165,14 @@ io.on("connection", socket => {
         io.in(data.id).emit("switch", rooms[searchRooms(data.id)].players);
     });
 
+    socket.on("lock", data => {
+        if(log){
+            console.log(`Team switching toggled in room ${data.id}`);
+        }
+        rooms[searchRooms(data.id)].canSwitchTeams = !rooms[searchRooms(data.id)].canSwitchTeams;
+        io.in(data.id).emit("lock", rooms[searchRooms(data.id)].canSwitchTeams);
+    });
+
     socket.on("disconnect", data => {
         if(log){
             console.log("Disconnect occurred.");
@@ -256,7 +265,8 @@ app.get("/api/names/:room", (req, res) => {
         }else{
             return res.status(400).send({
                 team1Name: "",
-                team2Name: ""
+                team2Name: "",
+                canSwitchTeams: rooms[index].canSwitchTeams
             });
         }
     } catch(err){ console.error(err); }

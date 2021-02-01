@@ -26,7 +26,8 @@ class Admin extends React.Component {
             team1Score: 0,
             team2Score: 0,
             team1Name: "Team 1",
-            team2Name: "Team 2"
+            team2Name: "Team 2",
+            canSwitchTeams: false
         };
 
         this.socket = io();
@@ -77,6 +78,14 @@ class Admin extends React.Component {
         });
 
         this.socket.emit("name", { id: this.state.room, team1: this.state.team1Name, team2: name });
+    }
+
+    toggleLock = () => {
+        this.setState({
+            canSwitchTeams: !this.state.canSwitchTeams
+        });
+
+        this.socket.emit("lock", { id: this.state.room, canSwitchTeams: this.state.canSwitchTeams})
     }
 
     componentDidMount() {
@@ -202,6 +211,10 @@ class Admin extends React.Component {
                             updateTeam2Name={this.updateTeam2Name}
                         />
                     )}
+                    {this.state.type==="custom" && (<div>
+                    {this.state.canSwitchTeams ? <button className="toggle" onClick={() => this.toggleLock()}><span role="img" aria-label="locked">🔒</span></button> : <button className="toggle" onClick={() => this.toggleLock()}><span role="img" aria-label="unlocked">🔓</span></button> }
+                        <p>Team switching {this.state.canSwitchTeams ? "locked" : "unlocked"}.</p>
+                    </div>)}
                 </div>
             </React.Fragment>
         );

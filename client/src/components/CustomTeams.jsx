@@ -26,8 +26,9 @@ class CustomTeams extends React.Component {
     }
 
     render() {
-        const { players, /* whoBuzzed, */ canControlScore, team1Score, team2Score, team1Name, team2Name, switchTeams } = this.props;
-        let team1Style, team2Style;
+        const { players, /* whoBuzzed, */ canControlScore, team1Score, team2Score, team1Name, team2Name, switchTeams, canSwitchTeams } = this.props;
+		const switchButtonShouldShow = canSwitchTeams && !canControlScore;
+		let team1Style, team2Style;
         // let index = -1;
 
         if (Array.isArray(players)) {
@@ -86,7 +87,7 @@ class CustomTeams extends React.Component {
 						</div>
 					</div>
 					<div>
-						{!canControlScore && (
+						{switchButtonShouldShow &&  (
 							<button className="switch-teams" onClick={() => switchTeams()}>Switch Teams</button>
 						)}
 					</div>
