@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import Players from "../components/Players";
 import RandomTeams from "../components/RandomTeams";
+import CustomTeams from "../components/CustomTeams";
 import Navbar from "../components/Navbar";
 import Room from "../components/Room";
 import { withRouter } from "react-router-dom";
@@ -23,7 +24,9 @@ class Admin extends React.Component {
                 playerID: ""
             },
             team1Score: 0,
-            team2Score: 0
+            team2Score: 0,
+            team1Name: "Team 1",
+            team2Name: "Team 2"
         };
 
         this.socket = io();
@@ -44,7 +47,6 @@ class Admin extends React.Component {
     }
 
     updateTeam1Score = score => {
-        console.log("Updating team 1 score in parent");
         this.setState({
             team1Score: score
         });
@@ -58,6 +60,23 @@ class Admin extends React.Component {
         });
 
         this.socket.emit("score", { id: this.state.room, team1: this.state.team1Score, team2: score });
+    }
+
+    updateTeam1Name = name => {
+        this.setState({
+            team1Name: name
+        });
+
+        this.socket.emit("name", { id: this.state.room, team1: name, team2: this.state.team2Name });
+    }
+
+
+    updateTeam2Name = name => {
+        this.setState({
+            team2Name: name
+        });
+
+        this.socket.emit("name", { id: this.state.room, team1: this.state.team1Name, team2: name });
     }
 
     componentDidMount() {
@@ -159,6 +178,21 @@ class Admin extends React.Component {
                             canControlScore={true} 
                             updateTeam1Score={this.updateTeam1Score}
                             updateTeam2Score={this.updateTeam2Score}
+                        />
+                    )}
+                    {this.state.type === "custom" && (
+                        <CustomTeams 
+                            players={this.state.players} 
+                            whoBuzzed={this.state.whoBuzzed}
+                            team1Score={this.state.team1Score}
+                            team2Score={this.state.team2Score}
+                            team1Name={this.state.team1Name}
+                            team2Name={this.state.team2Name}
+                            canControlScore={true} 
+                            updateTeam1Score={this.updateTeam1Score}
+                            updateTeam2Score={this.updateTeam2Score}
+                            updateTeam1Name={this.updateTeam1Name}
+                            updateTeam2Name={this.updateTeam2Name}
                         />
                     )}
                 </div>

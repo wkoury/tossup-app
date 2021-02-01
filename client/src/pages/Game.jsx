@@ -1,10 +1,9 @@
 import React from "react";
 import io from "socket.io-client";
 import axios from "axios";
-// import Teams from "../components/Teams";
-// import Players from "../components/Players";
 import Navbar from "../components/Navbar";
 import RandomTeams from "../components/RandomTeams";
+import CustomTeams from "../components/CustomTeams";
 import Room from "../components/Room";
 import { withRouter } from "react-router-dom";
 import "../App.css";
@@ -26,7 +25,9 @@ class Game extends React.Component {
             },
             disconnected: false,
             team1Score: "",
-            team2Score: ""
+            team2Score: "",
+            team1Name: "",
+            team2Name: ""
         };
 
         setInterval(() => { //every half second, check to see if the socket is still connected
@@ -78,11 +79,20 @@ class Game extends React.Component {
             this.setState({
                 type: res.data.type
             });
-            if(res.data.type === "teams"){
+            if(res.data.type === "teams" || res.data.type === "custom"){
                 axios.get(`/api/score/${this.state.room}`).then(res => {
                     this.setState({
                         team1Score: res.data.team1Score,
                         team2Score: res.data.team2Score
+                    });
+                });
+            }
+
+            if(res.data.type === "custom"){
+                axios.get(`/api/names/${this.state.room}`).then(res => {
+                    this.setState({
+                        team1Name: res.data.team1Name,
+                        team2Name: res.data.team2Name
                     });
                 });
             }
@@ -128,6 +138,13 @@ class Game extends React.Component {
             this.setState({
                 team1Score: data.team1,
                 team2Score: data.team2
+            });
+        });
+
+        this.state.socket.on("name", data => {
+            this.setState({
+                team1Name: data.team1,
+                team2Name: data.team2
             });
         });
 
@@ -204,6 +221,17 @@ class Game extends React.Component {
                             whoBuzzed={this.state.whoBuzzed} 
                             team1Score={this.state.team1Score}
                             team2Score={this.state.team2Score}
+                            canControlScore={false}
+                        />
+                    )}
+                    {this.state.type === "custom" && (
+                        <CustomTeams 
+                            players={this.state.players} 
+                            whoBuzzed={this.state.whoBuzzed} 
+                            team1Score={this.state.team1Score}
+                            team2Score={this.state.team2Score}
+                            team1Name={this.state.team1Name}
+                            team2Name={this.state.team2Name}
                             canControlScore={false}
                         />
                     )}

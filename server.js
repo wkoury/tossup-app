@@ -31,6 +31,10 @@ function createRoom(type) {
         score: {
             team1: 0,
             team2: 0
+        },
+        names: {
+            team1: "Team 1",
+            team2: "Team 2"
         }
     }
 
@@ -145,6 +149,12 @@ io.on("connection", socket => {
         io.in(data.id).emit("score", rooms[searchRooms(data.id)].score);
     });
 
+    socket.on("name", data => {
+        rooms[searchRooms(data.id)].names.team1 = data.team1;
+        rooms[searchRooms(data.id)].names.team2 = data.team2;
+        io.in(data.id).emit("name", rooms[searchRooms(data.id)].names);
+    })
+
     socket.on("disconnect", data => {
         if(log){
             console.log("Disconnect occurred.");
@@ -192,12 +202,20 @@ app.get("/api/room/:type", (req, res) => {
             id: newRoomID,
             type: req.params.type
         });
-    } else if (req.params.type === "default") {
+    } else if(req.params.type === "custom"){
+        let newRoomID = createRoom("custom").id;
+        return res.status(200).send({
+            id: newRoomID,
+            type: req.params.type
+        });
+    }else if (req.params.type === "default") {
         let newRoomID = createRoom("default").id;
         return res.status(200).send({
             id: newRoomID,
             type: req.params.type
         });
+    }else{
+        return res.status(403).send("This operation is not permitted.");
     }
 });
 
@@ -210,9 +228,26 @@ app.get("/api/score/:room", (req, res) => {
                 team2Score: rooms[index].score.team2
             });
         }else{
-            return res.status(200).send({
+            return res.status(400).send({
                 team1Score: "",
                 team2Score: ""
+            });
+        }
+    } catch(err){ console.error(err); }
+});
+
+app.get("/api/names/:room", (req, res) => {
+    try{
+        let index = searchRooms(req.params.room);
+        if(index > -1){
+            return res.status(200).send({
+                team1Name: rooms[index].team1Name,
+                team2Name: rooms[index].team2Name
+            });
+        }else{
+            return res.status(400).send({
+                team1Name: "",
+                team2Name: ""
             });
         }
     } catch(err){ console.error(err); }
