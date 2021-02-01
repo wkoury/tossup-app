@@ -11,7 +11,7 @@ const CreateGame = () => {
                 <br></br>
                 <Link to="/admin/teams">Random Teams</Link>
                 <br></br>
-                <Link to="admin/custom">Custom Teams (Alpha)</Link>
+                <Link to="admin/custom">Custom Teams (Beta)</Link>
             </div>
         </React.Fragment>
     );

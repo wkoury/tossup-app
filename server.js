@@ -260,13 +260,14 @@ app.get("/api/names/:room", (req, res) => {
         if(index > -1){
             return res.status(200).send({
                 team1Name: rooms[index].team1Name,
-                team2Name: rooms[index].team2Name
+                team2Name: rooms[index].team2Name,
+                canSwitchTeams: rooms[index].canSwitchTeams
             });
         }else{
             return res.status(400).send({
                 team1Name: "",
                 team2Name: "",
-                canSwitchTeams: rooms[index].canSwitchTeams
+                canSwitchTeams: ""
             });
         }
     } catch(err){ console.error(err); }
