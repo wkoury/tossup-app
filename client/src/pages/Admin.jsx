@@ -120,6 +120,13 @@ class Admin extends React.Component {
             sound.play(); 
         });
 
+        //listen for players to switch teams when custom teams are selected
+        this.socket.on("switch", data => { 
+            this.setState({
+                players: data
+            });
+        });
+
         this.socket.on("clear", data => {
             this.setState({
                 canBuzz: true,

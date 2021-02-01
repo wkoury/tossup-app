@@ -27,7 +27,7 @@ class Game extends React.Component {
             team1Score: "",
             team2Score: "",
             team1Name: "",
-            team2Name: ""
+            team2Name: "",
         };
 
         setInterval(() => { //every half second, check to see if the socket is still connected
@@ -41,6 +41,7 @@ class Game extends React.Component {
         this.handleBuzz = this.handleBuzz.bind(this);
         this.authenticate = this.authenticate.bind(this);
         this.initializePlayer = this.initializePlayer.bind(this);
+        this.switchTeams = this.switchTeams.bind(this);
     }
 
     authenticate = () => {
@@ -49,6 +50,13 @@ class Game extends React.Component {
                 this.props.history.push("/");
             }
         }).catch(e => this.props.history.push("/"));
+    }
+
+    switchTeams = () => {
+        this.state.socket.emit("switch", {
+            id: this.state.room,
+            playerID: this.state.socket.id
+        });
     }
 
     componentDidMount() {
@@ -148,6 +156,12 @@ class Game extends React.Component {
             });
         });
 
+        this.state.socket.on("switch", data => { 
+            this.setState({
+                players: data
+            });
+        });
+
         //on player disconnect
         this.state.socket.on("disconnect", data => {
             this.setState({
@@ -233,6 +247,7 @@ class Game extends React.Component {
                             team1Name={this.state.team1Name}
                             team2Name={this.state.team2Name}
                             canControlScore={false}
+                            switchTeams={this.switchTeams}
                         />
                     )}
                 </div>

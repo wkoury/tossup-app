@@ -101,7 +101,8 @@ io.on("connection", socket => {
                 playerID: socket.id,
                 name: data.name,
                 disconnected: false,
-                id: data.id
+                id: data.id,
+                team1: true
             };
             rooms[searchRooms(data.id)].players.push(player);
             socket.join(rooms[searchRooms(data.id)].id);
@@ -153,7 +154,15 @@ io.on("connection", socket => {
         rooms[searchRooms(data.id)].names.team1 = data.team1;
         rooms[searchRooms(data.id)].names.team2 = data.team2;
         io.in(data.id).emit("name", rooms[searchRooms(data.id)].names);
-    })
+    });
+
+    socket.on("switch", data => {
+        if(log){
+            console.log(`Team switch requested in room ${data.id}`);
+        }
+        rooms[searchRooms(data.id)].players.find(p => p.playerID === data.playerID).team1 = !rooms[searchRooms(data.id)].players.find(p => p.playerID === data.playerID).team1;
+        io.in(data.id).emit("switch", rooms[searchRooms(data.id)].players);
+    });
 
     socket.on("disconnect", data => {
         if(log){
