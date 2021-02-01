@@ -215,7 +215,7 @@ app.get("/api/room/:type", (req, res) => {
             type: req.params.type
         });
     }else{
-        return res.status(403).send("This operation is not permitted.");
+        return res.status(400).send("Invalid room type.");
     }
 });
 
