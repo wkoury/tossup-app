@@ -20,8 +20,8 @@ The Express server can serve the React app if you have built the React app (this
 The default proxy port is 8085, but you can change this in client/package.json and server.js.
 
 # Progress
-- [x] Add custom teams option
 - [ ] Allow admins to remove players
+- [x] Add custom teams option
 - [x] Fix keystroke event listener
 - [x] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)
 - [x] Add error handling to the Express server
