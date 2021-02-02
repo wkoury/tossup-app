@@ -85,7 +85,7 @@ function searchRooms(id) {
 
 async function logStatement(text){
     const writeable = new Date() + ": " + text + "\n";
-    console.log(writeable);
+    console.log(text);
     fs.appendFile("logs/log.log", writeable, err => {
         if(err) { console.log(err); }
     });
