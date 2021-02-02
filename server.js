@@ -321,9 +321,9 @@ app.get("/api/rooms/:room", (req, res) => {
     try {
         if(searchRooms(req.params.room) > -1){
             res.status(200).send("OK");
+        }else{
+            res.status(200).send("DNE");
         }
-
-        res.status(200).send("DNE");
     } catch (err) { console.error(err) }
 });
 
