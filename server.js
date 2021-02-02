@@ -4,6 +4,8 @@ const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
+const fs = require("fs");
+require("dotenv").config();
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 
@@ -40,15 +42,15 @@ function createRoom(type) {
     }
 
     if(log){
-        console.log("Creating a new room.");
-        console.log(room);
+        logStatement("Creating a new room.");
+        logStatement(room);
     }
 
     rooms.push(room);
 
     if(log){
-        console.log("Rooms array:");
-        console.log(rooms);
+        logStatement("Rooms array:");
+        logStatement(rooms);
     }
 
     return room;
@@ -63,15 +65,15 @@ function destroyRoom(index) {
 
 function searchRooms(id) {
     if(log){
-        console.log("Searching for room ", id);
-        console.log("Rooms array:");
-        console.log(rooms);
+        logStatement("Searching for room ", id);
+        logStatement("Rooms array:");
+        logStatement(rooms);
     }
     let index = -1;
     rooms.forEach(room => {
         if(log){
-            console.log("Search id: ", id);
-            console.log("Room id at index ", rooms.indexOf(room), ": ", room.id);
+            logStatement("Search id: ", id);
+            logStatement("Room id at index ", rooms.indexOf(room), ": ", room.id);
         }
         if (room.id === id) {
             index = rooms.indexOf(room);
@@ -79,6 +81,14 @@ function searchRooms(id) {
     });
 
     return index;
+}
+
+async function logStatement(text){
+    const writeable = new Date() + ": " + text + "\n";
+    console.log(writeable);
+    fs.appendFile("logs/log.log", writeable, err => {
+        if(err) { console.log(err); }
+    });
 }
 
 //socket.io
@@ -159,7 +169,7 @@ io.on("connection", socket => {
 
     socket.on("switch", data => {
         if(log){
-            console.log(`Team switch requested in room ${data.id}`);
+            logStatement(`Team switch requested in room ${data.id}`);
         }
         rooms[searchRooms(data.id)].players.find(p => p.playerID === data.playerID).team1 = !rooms[searchRooms(data.id)].players.find(p => p.playerID === data.playerID).team1;
         io.in(data.id).emit("switch", rooms[searchRooms(data.id)].players);
@@ -167,7 +177,7 @@ io.on("connection", socket => {
 
     socket.on("lock", data => {
         if(log){
-            console.log(`Team switching toggled in room ${data.id}`);
+            logStatement(`Team switching toggled in room ${data.id}`);
         }
         rooms[searchRooms(data.id)].canSwitchTeams = !rooms[searchRooms(data.id)].canSwitchTeams;
         io.in(data.id).emit("lock", rooms[searchRooms(data.id)].canSwitchTeams);
@@ -175,7 +185,7 @@ io.on("connection", socket => {
 
     socket.on("disconnect", data => {
         if(log){
-            console.log("Disconnect occurred.");
+            logStatement("Disconnect occurred.");
         }
         let index = -1;
         //search for room of player
@@ -199,11 +209,11 @@ io.on("connection", socket => {
 
         for (let i = 0; i < rooms.length; ++i) {
             if (rooms[i].adminID === socket.id) {
-                if(log) console.log("Destroying room ", rooms[i].id);
+                if(log) logStatement("Destroying room ", rooms[i].id);
                 destroyRoom(i);
                 if(log){
-                    console.log("Rooms:");
-                    console.log(rooms);
+                    logStatement("Rooms:");
+                    logStatement(rooms);
                 }
             }
         }
@@ -290,8 +300,8 @@ app.get("/api/roomType/:room", (req, res) => {
     try {
         let index = searchRooms(req.params.room);
         if(log){
-            console.log("Request to join room ", req.params.room);
-            console.log("Index: ", index);
+            logStatement("Request to join room ", req.params.room);
+            logStatement("Index: ", index);
         }
         if (index > -1) {
             return res.status(200).send({
@@ -306,7 +316,7 @@ app.get("/api/roomType/:room", (req, res) => {
 //API request to see if a room exists
 app.get("/api/rooms/:room", (req, res) => {
     if(log){
-        console.log("Request to join room ", req.params.room);
+        logStatement("Request to join room ", req.params.room);
     }
     try {
         if(searchRooms(req.params.room) > -1){
@@ -334,11 +344,24 @@ app.get("/api/health", (req, res) => { //for status pages
     res.status(200).send("OK");
 });
 
+// Get logs. Only for authorized users!
+app.get("/api/logs/", (req, res) => {
+    if(req.query.key === process.env.DEVELOPER_KEY){
+        fs.readFile("logs/log.log", (err, data) => {
+            if(err) { return res.status(500).send(err); }
+            return res.status(200).send(data);
+        });
+    }else{
+        return res.status(403).send("Unauthorized");
+    }
+});
+
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 server.listen(port, () => {
-    console.log(`Server running on port ${port}.`);
+    logStatement("Server restart.");
+    logStatement(`Server running on port ${port}.`);
 });

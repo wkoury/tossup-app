@@ -12,14 +12,17 @@
     "academic bowl",
     "academic",
     "online",
-    "easy"
+    "easy",
+    "free"
   ],
   "scripts": {
     "dev": "nodemon server.js",
     "build": "yarn ; cd client ; yarn ; yarn run build",
-    "test": "cd client ; yarn test"
+    "test": "cd client ; yarn test",
+    "clear-log": "rm logs/log.log"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodejs-unique-numeric-id-generator": "^1.0.1",
     "socket.io": "2.3.0"
