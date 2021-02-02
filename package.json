@@ -20,7 +20,7 @@
     "build": "yarn ; yarn create-log ; cd client ; yarn ; yarn run build",
     "test": "cd client ; yarn test",
     "clear-log": "rm logs/log.log",
-    "create-log": "mkdir logs && cd logs && touch log.log"
+    "create-log": "mkdir logs ; cd logs ; touch log.log"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
