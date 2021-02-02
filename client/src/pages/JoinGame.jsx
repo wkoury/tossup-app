@@ -79,12 +79,14 @@ class JoinGame extends React.Component {
                                         value={this.state.name}
                                         onChange={e => this.handleChange(e)}
                                     ></input>
-                                    <button
-                                        className="name-submit"
-                                        onClick={(e) => this.handleLogin(e)}
-                                    >
-                                        Join
-                                    </button>
+                                    <div>
+                                        <button
+                                            className="name-submit"
+                                            onClick={(e) => this.handleLogin(e)}
+                                        >
+                                            Join
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
