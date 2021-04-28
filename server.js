@@ -7,7 +7,25 @@ const port = process.env.PORT || 8085;
 const fs = require("fs");
 require("dotenv").config();
 
+/** START SERVER ROUTES */
+
+// React SPA
 app.use(express.static(path.join(__dirname, "./client/build")));
+
+// Other routes
+//Config
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
+app.set("view options", { layout: false } );
+//serve style sheets from client
+app.use(express.static("./client/src/"));
+
+//dashboard
+app.get("/dashboard", (req, res) => {
+    res.render("dashboard");
+});
+
+/** END SERVER ROUTES */
 
 //whether or not we should be printing things to the console
 const log = true;
@@ -222,6 +240,8 @@ io.on("connection", socket => {
     });
 });
 
+/** START API ROUTES */
+
 //API request to create a room
 app.get("/api/room/:type", (req, res) => {
     if (req.params.type === "teams") {
@@ -360,6 +380,8 @@ app.get("/api/logs/", (req, res) => {
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
+
+/** END API ROUTES */
 
 server.listen(port, () => {
     logStatement("Server restart.");

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="index.css" />
+		<link rel="stylesheet" href="app.css" />
+		<script type="text/javascript">
+			function loadData () {
+				fetch("/api/roomCount").then(res => {
+					res.json().then(openRooms => {
+						document.getElementById("open-rooms").innerHTML = openRooms.count;
+					});
+				});
+
+				fetch("/api/roomsCreated").then(res => {
+					res.json().then(roomsCreated => {
+						document.getElementById("rooms-created").innerHTML = roomsCreated.count;
+					});
+				});
+			}
+
+			window.onload = () => {
+				loadData();
+				setInterval(() => {
+					loadData();
+				}, 5000);
+			}
+		</script>
+	</head>
+	<body>
+		<div class="App">
+			<a href="/">Tossup</a>
+			<h3>Open rooms:</h3>
+			<p id="open-rooms">...</p>
+			<h3>Rooms created since last server start:</h3>
+			<p id="rooms-created">...</p>
+			<span style="font-size: 0.7rem;">(The server is restarted nightly and when changes are pushed)</span>
+		</div>
+	</body>
+</html>
