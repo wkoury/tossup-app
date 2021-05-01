@@ -1,4 +1,5 @@
 import React from "react";
+import Player from "./Player";
 import "../App.css";
 
 class Players extends React.Component {
@@ -12,7 +13,7 @@ class Players extends React.Component {
             return (
                 <div className="row">
                     <h5>Players</h5>
-                    {players.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
+                    {players.map(player => <Player key={player.playerID} name={player.name} disconnected={player.disconnected} />)}
                 </div>
             );
         } else {
