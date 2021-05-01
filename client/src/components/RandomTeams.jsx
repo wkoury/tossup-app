@@ -1,4 +1,5 @@
 import React from "react";
+import Player from "./Player";
 import "../App.css";
 
 class RandomTeams extends React.Component {
@@ -68,12 +69,12 @@ class RandomTeams extends React.Component {
                     <div className="column left" style={team1Style}>
                         {canControlScore ? <input type="number" className="score-input" name="team1Score" value={team1Score} onChange={e => this.handleChange(e)}></input> : <h6>{team1Score}</h6>}
                         <h5>Team 1</h5>
-                        {team1.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
+                        {team1.map(player => <Player key={player.playerID} disconnected={player.disconnected} name={player.name} />)}
                     </div>
                     <div className="column right" style={team2Style}>
                         {canControlScore ? <input type="number" className="score-input" name="team2Score" value={team2Score} onChange={e => this.handleChange(e)}></input> : <h6>{team2Score}</h6>}
                         <h5>Team 2</h5>
-                        {team2.map(player => <p key={player.playerID} style={{ textDecoration: player.disconnected ? "line-through" : "none" }}>{player.name}</p>)}
+                        {team2.map(player => <Player key={player.playerID} disconnected={player.disconnected} name={player.name} />)}
                     </div>
                 </div>
             );
