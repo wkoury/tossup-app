@@ -21,7 +21,9 @@ The default proxy port is 8085, but you can change this in client/package.json a
 
 # Progress
 - [ ] Allow admins to remove players
-- [ ] Implement Cypress for automated testing
+- [ ] Research how to decentralize Tossup (let people run their own local instances without Internet)
+- [ ] Implement Redis for persistent matches across server restarts (or at least see if this is possible)?
+- [ ] Automated testing
 - [x] Add custom teams option
 - [x] Fix keystroke event listener
 - [x] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)
