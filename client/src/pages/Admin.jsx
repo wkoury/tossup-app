@@ -88,6 +88,10 @@ class Admin extends React.Component {
         this.socket.emit("lock", { id: this.state.room, canSwitchTeams: this.state.canSwitchTeams})
     }
 
+    removePlayer = playerID => {
+        this.socket.emit("remove", { id: this.state.room, playerID: playerID });
+    }
+
     componentDidMount() {
 
         //this should initialize a room
@@ -126,11 +130,11 @@ class Admin extends React.Component {
                 }
             });
             let sound = new Audio(buzzerSound);
-            sound.play(); 
+            sound.play();
         });
 
         //listen for players to switch teams when custom teams are selected
-        this.socket.on("switch", data => { 
+        this.socket.on("switch", data => {
             this.setState({
                 players: data
             });
@@ -184,32 +188,40 @@ class Admin extends React.Component {
                             <p>{this.state.whoBuzzed.name} has buzzed.</p>
                         </React.Fragment>
                     )}
-                    {this.state.type === "default" && (<Players players={this.state.players} whoBuzzed={this.state.whoBuzzed} />)}
+                    {this.state.type === "default" && (
+                        <Players
+                            players={this.state.players}
+                            whoBuzzed={this.state.whoBuzzed}
+                            removePlayer={this.removePlayer}
+                        />
+                    )}
                     {this.state.type === "teams" && (
-                        <RandomTeams 
-                            players={this.state.players} 
+                        <RandomTeams
+                            players={this.state.players}
                             whoBuzzed={this.state.whoBuzzed}
                             team1Score={this.state.team1Score}
                             team2Score={this.state.team2Score}
-                            canControlScore={true} 
+                            canControlScore={true}
                             updateTeam1Score={this.updateTeam1Score}
                             updateTeam2Score={this.updateTeam2Score}
+                            removePlayer={this.removePlayer}
                         />
                     )}
                     {this.state.type === "custom" && (
-                        <CustomTeams 
-                            players={this.state.players} 
+                        <CustomTeams
+                            players={this.state.players}
                             whoBuzzed={this.state.whoBuzzed}
                             team1Score={this.state.team1Score}
                             team2Score={this.state.team2Score}
                             team1Name={this.state.team1Name}
                             team2Name={this.state.team2Name}
-                            canControlScore={true} 
+                            canControlScore={true}
                             updateTeam1Score={this.updateTeam1Score}
                             updateTeam2Score={this.updateTeam2Score}
                             updateTeam1Name={this.updateTeam1Name}
                             updateTeam2Name={this.updateTeam2Name}
                             canSwitchTeams={this.state.canSwitchTeams}
+                            removePlayer={this.removePlayer}
                         />
                     )}
                     {this.state.type==="custom" && (<div>

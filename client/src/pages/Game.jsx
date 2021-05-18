@@ -158,7 +158,7 @@ class Game extends React.Component {
             });
         });
 
-        this.state.socket.on("switch", data => { 
+        this.state.socket.on("switch", data => {
             this.setState({
                 players: data
             });
@@ -238,18 +238,19 @@ class Game extends React.Component {
                         )}
                     {/* {this.state.type === "default" && (<Players players={this.state.players}/>)} */}
                     {this.state.type === "teams" && (
-                        <RandomTeams 
-                            players={this.state.players} 
-                            whoBuzzed={this.state.whoBuzzed} 
+                        <RandomTeams
+                            players={this.state.players}
+                            whoBuzzed={this.state.whoBuzzed}
                             team1Score={this.state.team1Score}
                             team2Score={this.state.team2Score}
                             canControlScore={false}
+                            removePlayer={() => {}} //do nothing
                         />
                     )}
                     {this.state.type === "custom" && (
-                        <CustomTeams 
-                            players={this.state.players} 
-                            whoBuzzed={this.state.whoBuzzed} 
+                        <CustomTeams
+                            players={this.state.players}
+                            whoBuzzed={this.state.whoBuzzed}
                             team1Score={this.state.team1Score}
                             team2Score={this.state.team2Score}
                             team1Name={this.state.team1Name}
@@ -257,6 +258,7 @@ class Game extends React.Component {
                             canControlScore={false}
                             switchTeams={this.switchTeams}
                             canSwitchTeams={this.state.canSwitchTeams}
+                            removePlayer={() => {}} //do nothing
                         />
                     )}
                 </div>
