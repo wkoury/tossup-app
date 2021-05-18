@@ -201,6 +201,14 @@ io.on("connection", socket => {
         io.in(data.id).emit("lock", rooms[searchRooms(data.id)].canSwitchTeams);
     });
 
+    // handle an Admin removing a player
+    socket.on("remove", data => {
+           if(log){
+               logStatement(`Admin has removed player ${data.id}`);
+           }
+           //TODO: remove a socket by its ID, given as data.id
+    });
+
     socket.on("disconnect", data => {
         if(log){
             logStatement("Disconnect occurred.");
@@ -236,7 +244,7 @@ io.on("connection", socket => {
             }
         }
 
-        
+
     });
 });
 
