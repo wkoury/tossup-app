@@ -16,6 +16,7 @@
     "free"
   ],
   "scripts": {
+    "start": "node server.js PORT=80",
     "dev": "nodemon server.js",
     "build": "yarn ; yarn create-log ; cd client ; yarn ; yarn run build",
     "test": "cd client ; yarn test",
