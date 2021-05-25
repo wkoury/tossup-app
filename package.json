@@ -18,9 +18,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "yarn & cd client && yarn && yarn run build",
-    "test": "cd client ; yarn test",
-    "clear-log": "rm logs/log.log",
-    "create-log": "mkdir logs ; cd logs ; touch log.log"
+    "test": "cd client && yarn test"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
