@@ -8,3 +8,7 @@ build:
 		cd client && \
 		yarn install --production && \
 		yarn build
+
+build-dev:
+	yarn & \
+	cd client && yarn

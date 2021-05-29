@@ -183,6 +183,12 @@ class Game extends React.Component {
             });
         });
 
+		this.state.socket.on("remove", data => {
+			this.setState({
+				players: data.players
+			});
+		});
+
         this.initializePlayer();
 
         document.addEventListener("keydown", e => {
@@ -245,6 +251,7 @@ class Game extends React.Component {
                             team2Score={this.state.team2Score}
                             canControlScore={false}
                             removePlayer={() => {}} //do nothing
+							isAdmin={false}
                         />
                     )}
                     {this.state.type === "custom" && (
@@ -259,6 +266,7 @@ class Game extends React.Component {
                             switchTeams={this.switchTeams}
                             canSwitchTeams={this.state.canSwitchTeams}
                             removePlayer={() => {}} //do nothing
+							isAdmin={false}
                         />
                     )}
                 </div>

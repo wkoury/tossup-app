@@ -201,6 +201,6 @@ a:hover{
   margin-bottom: 25px;
 }
 
-.player:hover {
+.admin-player:hover {
   text-decoration: line-through;
 }

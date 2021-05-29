@@ -150,6 +150,12 @@ class Admin extends React.Component {
             });
         });
 
+		this.socket.on("remove", data => {
+			this.setState({
+				players: data.players
+			});
+		});
+
         document.addEventListener("keydown", e => {
             if(e.code === "Space"){
                 this.handleClear();
@@ -193,6 +199,7 @@ class Admin extends React.Component {
                             players={this.state.players}
                             whoBuzzed={this.state.whoBuzzed}
                             removePlayer={this.removePlayer}
+							isAdmin={true}
                         />
                     )}
                     {this.state.type === "teams" && (
@@ -205,6 +212,7 @@ class Admin extends React.Component {
                             updateTeam1Score={this.updateTeam1Score}
                             updateTeam2Score={this.updateTeam2Score}
                             removePlayer={this.removePlayer}
+							isAdmin={true}
                         />
                     )}
                     {this.state.type === "custom" && (
@@ -222,6 +230,7 @@ class Admin extends React.Component {
                             updateTeam2Name={this.updateTeam2Name}
                             canSwitchTeams={this.state.canSwitchTeams}
                             removePlayer={this.removePlayer}
+							isAdmin={true}
                         />
                     )}
                     {this.state.type==="custom" && (<div>

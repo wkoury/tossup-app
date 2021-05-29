@@ -27,7 +27,7 @@ class CustomTeams extends React.Component {
     }
 
     render() {
-        const { players, /* whoBuzzed, */ canControlScore, team1Score, team2Score, team1Name, team2Name, switchTeams, canSwitchTeams , removePlayer } = this.props;
+        const { players, /* whoBuzzed, */ canControlScore, team1Score, team2Score, team1Name, team2Name, switchTeams, canSwitchTeams , removePlayer, isAdmin } = this.props;
         const switchButtonShouldShow = canSwitchTeams && !canControlScore;
         const canChangeTeamNames = canSwitchTeams && canControlScore;
 		let team1Style, team2Style;
@@ -80,12 +80,12 @@ class CustomTeams extends React.Component {
 						<div className="column left" style={team1Style}>
 							{canControlScore ? <input type="number" className="score-input" name="team1Score" value={team1Score} onChange={e => this.handleChange(e)}></input> : <h6>{team1Score}</h6>}
 							{canChangeTeamNames ? <input type="text" className="name-input" name="team1Name" value={team1Name} onChange={e => this.handleChange(e)}></input> : <h5>{team1Name}</h5>}
-							{team1.map(player => <Player key={player.playerID} playerID={player.playerID} disconnected={player.disconnected} name={player.name} removePlayer={removePlayer} />)}
+							{team1.map(player => <Player key={player.playerID} playerID={player.playerID} disconnected={player.disconnected} name={player.name} removePlayer={removePlayer} isAdmin={isAdmin} />)}
 						</div>
 						<div className="column right" style={team2Style}>
 							{canControlScore ? <input type="number" className="score-input" name="team2Score" value={team2Score} onChange={e => this.handleChange(e)}></input> : <h6>{team2Score}</h6>}
 							{canChangeTeamNames ? <input type="text" className="name-input" name="team2Name" value={team2Name} onChange={e => this.handleChange(e)}></input> : <h5>{team2Name}</h5>}
-							{team2.map(player => <Player key={player.playerID} playerID={player.playerID} disconnected={player.disconnected} name={player.name} removePlayer={removePlayer} />)}
+							{team2.map(player => <Player key={player.playerID} playerID={player.playerID} disconnected={player.disconnected} name={player.name} removePlayer={removePlayer} isAdmin={isAdmin} />)}
 						</div>
 					</div>
 					<div>
