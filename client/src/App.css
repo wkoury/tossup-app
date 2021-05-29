@@ -200,3 +200,7 @@ a:hover{
   border: none;
   margin-bottom: 25px;
 }
+
+.admin-player:hover {
+  text-decoration: line-through;
+}

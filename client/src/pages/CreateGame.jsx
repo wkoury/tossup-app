@@ -3,18 +3,18 @@ import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 
 const CreateGame = () => {
-    return (
-        <React.Fragment>
-            <Navbar />
-            <div className="App">
-                <Link to="/admin/default">No Teams</Link>
-                <br></br>
-                <Link to="/admin/teams">Random Teams</Link>
-                <br></br>
-                <Link to="admin/custom">Custom Teams (Beta)</Link>
-            </div>
-        </React.Fragment>
-    );
+	return (
+		<React.Fragment>
+			<Navbar />
+			<div className="App">
+				<Link to="/admin/default">No Teams</Link>
+				<br></br>
+				<Link to="/admin/teams">Random Teams</Link>
+				<br></br>
+				<Link to="admin/custom">Custom Teams</Link>
+			</div>
+		</React.Fragment>
+	);
 }
 
 export default CreateGame;
