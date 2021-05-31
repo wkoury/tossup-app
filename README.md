@@ -20,10 +20,10 @@ The Express server can serve the React app if you have built the React app (this
 The default proxy port is 8085, but you can change this in client/package.json and server.js.
 
 # Progress
-- [ ] Allow admins to remove players
 - [ ] Research how to decentralize Tossup (let people run their own local instances without Internet)
 - [ ] Implement Redis for persistent matches across server restarts (or at least see if this is possible)?
 - [ ] Automated testing
+- [x] Allow admins to remove players
 - [x] Add custom teams option
 - [x] Fix keystroke event listener
 - [x] Add buzzer sound to, at the very least, the ```Admin``` page (possibly the ```Game``` too)
