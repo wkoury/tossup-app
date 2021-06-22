@@ -1,6 +1,6 @@
 FROM node:14.17.0
 
-RUN npm i -g --force yarn
+RUN npm i -g --force yarn pm2
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ RUN make build
 
 EXPOSE 8085
 
-ENTRYPOINT ["node", "server.js"]
+ENTRYPOINT ["pm2-runtime", "server.js"]
