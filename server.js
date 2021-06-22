@@ -12,6 +12,9 @@ require("dotenv").config();
 // React SPA
 app.use(express.static(path.join(__dirname, "./client/build")));
 
+// Copied CSS file over to public for the dashboard
+app.use("/public", express.static(path.join(__dirname, "/public")));
+
 // Other routes
 //Config
 app.set("view engine", "ejs");
