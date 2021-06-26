@@ -12,7 +12,7 @@ fi
 echo "Updating the production branch..."
 #Update git
 git checkout prod
-git merge --no-commit --ff master
+git merge master -m "Merge master into production $(date)"
 git push
 git checkout master
 echo "Production branch successfully updated!"
