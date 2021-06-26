@@ -23,7 +23,7 @@ docker-build:
 	docker build --no-cache -t $(IMAGE) .
 
 docker-run:
-	docker run -it -p 8085:8085 $(IMAGE)
+	docker run -it --rm -p 8085:8085 $(IMAGE)
 
 docker-run-prod:
 	docker run -d --restart=always -p 8085:8085 $(IMAGE)
