@@ -2,7 +2,7 @@ IMAGE="tossup"
 
 all: build
 
-.PHONY: dev build build-dev docker-build docker-run docker-run-prod
+.PHONY: dev build build-dev docker-build docker-run docker-run-prod deploy
 
 dev:
 	yarn dev& cd client && yarn start
@@ -27,3 +27,6 @@ docker-run:
 
 docker-run-prod:
 	docker run -d --restart=always -p 8085:8085 $(IMAGE)
+
+deploy:
+	sh scripts/deploy.sh
