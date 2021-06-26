@@ -9,6 +9,14 @@ if [[ -z "${DEPLOY_ADDRESS}" ]]; then
 	exit 1
 fi
 
+echo "Updating the production branch..."
+#Update git
+git checkout prod
+git merge --commit master
+git push
+git checkout master
+echo "Production branch successfully updated!"
+
 echo "Deploying to $DEPLOY_ADDRESS."
 
 ssh -A $DEPLOY_ADDRESS "$(cat scripts/update.txt)"
