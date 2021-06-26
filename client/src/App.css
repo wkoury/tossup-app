@@ -96,6 +96,7 @@ body {
 
 .buzzer:hover {
   border: 7px solid black;
+  transition: 0.2s;
 }
 
 .clear {

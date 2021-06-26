@@ -10,9 +10,9 @@ dev:
 build:
 	cp client/src/App.css public/style.css && \
 	cp client/src/index.css public/index.css && \
-	yarn install --production & \
+	yarn install --production --frozen-lockfile & \
 		cd client && \
-		yarn install --production && \
+		yarn install --production --frozen-lockfile && \
 		yarn build
 
 build-dev:
