@@ -2,4 +2,5 @@ cd tossup-app && \
 git checkout prod && git pull && \
 make docker-build && \
 docker stop $(docker ps -q) && \
-make docker-run-prod
+make docker-run-prod && \
+docker system prune -af
