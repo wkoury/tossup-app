@@ -2,22 +2,24 @@ IMAGE="tossup"
 
 all: build
 
-.PHONY: dev build build-dev docker-build docker-run docker-run-prod deploy
+.PHONY: dev build build-dev docker-build docker-run docker-run-prod deploy prune-dev-dependencies
 
 dev:
-	yarn dev& cd client && yarn start
+	yarn dev & cd client && yarn start
 
-build:
+build: build-dev
 	cp client/src/App.css public/style.css && \
 	cp client/src/index.css public/index.css && \
-	yarn install --production --frozen-lockfile & \
-		cd client && \
-		yarn install --production --frozen-lockfile && \
-		yarn build
+	cd client && \
+	yarn build
 
 build-dev:
-	yarn & \
-	cd client && yarn
+	yarn --frozen-lockfile & \
+	cd client && yarn --frozen-lockfile
+
+prune-dev-dependencies:
+	yarn install --production --frozen-lockfile & \
+	cd client && yarn install --production --frozen-lockfile
 
 docker-build:
 	docker build --no-cache -t $(IMAGE) .
