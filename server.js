@@ -4,7 +4,6 @@ const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
-const fs = require("fs");
 require("dotenv").config();
 
 /** START SERVER ROUTES */
@@ -315,8 +314,8 @@ app.get("/api/names/:room", (req, res) => {
 		let index = searchRooms(req.params.room);
 		if (index > -1) {
 			return res.status(200).send({
-				team1Name: rooms[index].team1Name,
-				team2Name: rooms[index].team2Name,
+				team1Name: rooms[index].names.team1,
+				team2Name: rooms[index].names.team2,
 				canSwitchTeams: rooms[index].canSwitchTeams
 			});
 		} else {
