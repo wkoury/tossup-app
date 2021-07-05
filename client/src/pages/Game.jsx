@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import RandomTeams from "../components/RandomTeams";
 import CustomTeams from "../components/CustomTeams";
 import Room from "../components/Room";
+import Disconnected from "../components/Disconnected";
 import { withRouter } from "react-router-dom";
 import "../App.css";
 
@@ -124,10 +125,22 @@ class Game extends React.Component {
 
 		//listen for other users to buzz
 		this.state.socket.on("buzz", data => {
+			//create a team name string to add to name
+			let teamName;
+			this.state.players.forEach(player => {
+				if(player.playerID === data.playerID) {
+					// check which team the player is on
+					teamName = player.team1 ? (typeof(this.state.team1Name) !== "undefined" ? " (" + this.state.team1Name + ")" : "") : (typeof(this.state.team2Name) !== "undefined" ? " (" + this.state.team2Name + ")" : "");
+				}
+			});
+			// don't use the custom team name if the game does not have custom teams
+			if(this.state.type !== "custom") {
+				teamName = "";
+			}
 			this.setState({
 				canBuzz: false,
 				whoBuzzed: {
-					name: data.name,
+					name: data.name + teamName,
 					playerID: data.playerID
 				}
 			});
@@ -222,12 +235,7 @@ class Game extends React.Component {
 	render() {
 		if (this.state.disconnected) {
 			return (
-				<React.Fragment>
-					<Navbar />
-					<div className="App">
-						<h3>You were disconnected!</h3>
-					</div>
-				</React.Fragment>
+				<Disconnected />
 			);
 		}
 		return (

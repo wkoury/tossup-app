@@ -122,10 +122,22 @@ class Admin extends React.Component {
 
 		//listen for other users to buzz
 		this.socket.on("buzz", data => {
+			//create a team name string to add to name
+			let teamName;
+			this.state.players.forEach(player => {
+				if(player.playerID === data.playerID) {
+					// check which team the player is on
+					teamName = player.team1 ? (typeof(this.state.team1Name) !== "undefined" ? " (" + this.state.team1Name + ")" : "") : (typeof(this.state.team2Name) !== "undefined" ? " (" + this.state.team2Name + ")" : "");
+				}
+			});
+			// don't use the custom team name if the game does not have custom teams
+			if(this.state.type !== "custom") {
+				teamName = "";
+			}
 			this.setState({
 				canBuzz: false,
 				whoBuzzed: {
-					name: data.name,
+					name: data.name + teamName,
 					playerID: data.playerID
 				}
 			});
