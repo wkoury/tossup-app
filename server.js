@@ -91,11 +91,11 @@ function searchRooms(id) {
 	}
 	let index = -1;
 	rooms.forEach(room => {
-		if (log) {
-			logStatement("Search id: ", id);
-			logStatement("Room id at index ", rooms.indexOf(room), ": ", room.id);
-		}
 		if (room.id === id) {
+			if (log) {
+				logStatement("Search id: ", id);
+				logStatement("Room id at index ", rooms.indexOf(room), ": ", room.id);
+			}
 			index = rooms.indexOf(room);
 		}
 	});
@@ -104,13 +104,13 @@ function searchRooms(id) {
 }
 
 async function logStatement(text) {
-	const writeable = new Date() + ": " + text + "\n";
-	console.log(text);
+	const writeable = new Date() + ": " + JSON.stringify(text);
+	console.log(writeable);
 }
 
 //socket.io
 const options = {
-	pingInterval: 1000,
+	pingInterval: 500,
 	pingTimeout: 60000
 };
 
