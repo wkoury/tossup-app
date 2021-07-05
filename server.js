@@ -2,9 +2,16 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
+const auth = require("http-auth");
 var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
 require("dotenv").config();
+
+// basic http authentication
+const basic = auth.basic({
+	realm: "Admin",
+	file: __dirname + "/db/admins.htpasswd"
+});
 
 /** START SERVER ROUTES */
 
@@ -23,9 +30,9 @@ app.set("view options", { layout: false });
 app.use(express.static("./client/src/"));
 
 //dashboard
-app.get("/dashboard", (req, res) => {
-	res.render("dashboard");
-});
+app.get("/admin", basic.check((req, res) => {
+	res.render("admin");
+}));
 
 /** END SERVER ROUTES */
 

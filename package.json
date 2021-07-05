@@ -24,6 +24,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "http-auth": "^4.1.7",
     "nodejs-unique-numeric-id-generator": "^1.0.1",
     "socket.io": "2.3.0"
   },
