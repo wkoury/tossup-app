@@ -2,7 +2,7 @@
 const {Builder, By, Key, until} = require("selenium-webdriver");
 
 (async function example() {
-    let driver = await new Builder().forBrowser("safari").build();
+    let driver = await new Builder().forBrowser("firefox").build();
     try{
 
     await driver.get("http://localhost:8085");
@@ -22,10 +22,10 @@ const {Builder, By, Key, until} = require("selenium-webdriver");
     if(await roomNumber === ""){
         throw new Error("The room was not initialized!");
     }
-    
-    
-    }catch(e) { 
-        console.error(e); 
+
+
+    }catch(e) {
+        console.error(e);
     }finally{
         await driver.quit();
     }
