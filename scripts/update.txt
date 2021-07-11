@@ -1,6 +1,4 @@
 cd tossup-app && \
 git checkout prod && git pull && \
 make docker-build && \
-docker stop $(docker ps -q) && \
-sleep 5 && \
-make docker-run-prod
+docker-compose up -d
