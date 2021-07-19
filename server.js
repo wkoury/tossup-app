@@ -393,7 +393,7 @@ app.get("/api/buzzer/:room", (req, res) => {
 });
 
 app.get("/api/health", (req, res) => { //for status pages
-	res.status(200).send("OK");
+	res.status(200).send(new Date(Date.now()));
 });
 
 // Handles any requests that don"t match the ones above

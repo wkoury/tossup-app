@@ -17,6 +17,12 @@
 						document.getElementById("rooms-created").innerHTML = roomsCreated.count;
 					});
 				});
+
+				fetch("/api/health").then(res => {
+					res.json().then(something => {
+						document.getElementById("server-health").innerHTML = something;
+					});
+				});
 			}
 
 			window.onload = () => {
@@ -34,6 +40,8 @@
 			<p id="open-rooms">...</p>
 			<h3>Rooms created since last server start:</h3>
 			<p id="rooms-created">...</p>
+			<h6>Server Health:</h6>
+			<p id="server-health" style="font-size: 0.8rem; margin-top: -30px;">...</p>
 		</div>
 	</body>
 </html>
