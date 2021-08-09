@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import buzzerSound from "../assets/ding.mp3";
 import "../App.css";
 
-class Admin extends React.Component {
+class Moderator extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -255,4 +255,4 @@ class Admin extends React.Component {
 	}
 }
 
-export default withRouter(Admin);
+export default withRouter(Moderator);
