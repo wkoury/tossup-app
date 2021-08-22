@@ -335,17 +335,17 @@ app.get("/api/names/:room", (req, res) => {
 	} catch (err) { console.error(err); }
 });
 
-app.get("/api/roomCount", (req, res) => {
+app.get("/api/roomCount", basic.check((req, res) => {
 	return res.status(200).send({
 		count: rooms.length
 	});
-});
+}));
 
-app.get("/api/roomsCreated", (req, res) => {
+app.get("/api/roomsCreated", basic.check((req, res) => {
 	res.status(200).send({
 		count: roomsCreated
 	});
-});
+}));
 
 //get the room type
 app.get("/api/roomType/:room", (req, res) => {
@@ -392,9 +392,9 @@ app.get("/api/buzzer/:room", (req, res) => {
 	} catch (err) { console.error(err) }
 });
 
-app.get("/api/health", (req, res) => { //for status pages
+app.get("/api/health", basic.check((req, res) => { //for status pages
 	res.status(200).send(new Date(Date.now()));
-});
+}));
 
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {

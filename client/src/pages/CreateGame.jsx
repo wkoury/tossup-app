@@ -7,11 +7,11 @@ const CreateGame = () => {
 		<React.Fragment>
 			<Navbar />
 			<div className="App">
-				<Link to="/admin/default">No Teams</Link>
+				<Link to="/moderator/default">No Teams</Link>
 				<br></br>
-				<Link to="/admin/teams">Random Teams</Link>
+				<Link to="/moderator/teams">Random Teams</Link>
 				<br></br>
-				<Link to="admin/custom">Custom Teams</Link>
+				<Link to="/moderator/custom">Custom Teams</Link>
 			</div>
 		</React.Fragment>
 	);

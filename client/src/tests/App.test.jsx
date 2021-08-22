@@ -5,7 +5,7 @@ import Adapter from "enzyme-adapter-react-16";
 import { MemoryRouter, Link } from "react-router-dom";
 import App from "../App";
 import Landing from "../pages/Landing";
-import Admin from "../pages/Admin";
+import Moderator from "../pages/Moderator";
 import Game from "../pages/Game";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -25,17 +25,17 @@ describe("Routing", () => {
 			</MemoryRouter>
 		);
 		expect(wrapper.find(Landing).length).toEqual(1);
-		expect(wrapper.find(Admin).length).toEqual(0);
+		expect(wrapper.find(Moderator).length).toEqual(0);
 	});
 
-	it("should redirect inappropriate admin visits to the landing page", () => {
+	it("should redirect inappropriate moderator visits to the landing page", () => {
 		const wrapper = mount(
-			<MemoryRouter initialEntries={["/admin"]}>
+			<MemoryRouter initialEntries={["/moderator"]}>
 				<App />
 			</MemoryRouter>
 		);
 		expect(wrapper.find(Landing).length).toEqual(1);
-		expect(wrapper.find(Admin).length).toEqual(0);
+		expect(wrapper.find(Moderator).length).toEqual(0);
 	});
 
 	it("should redirect inappropriate game visits to the landing page", () => {

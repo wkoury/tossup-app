@@ -14,8 +14,8 @@ const Game = Loadable({
 	loading: React.Fragment
 });
 
-const Admin = Loadable({
-	loader: () => import("./pages/Admin"),
+const Moderator = Loadable({
+	loader: () => import("./pages/Moderator"),
 	loading: React.Fragment
 });
 
@@ -61,7 +61,7 @@ class App extends React.Component {
 					<Route exact path="/" component={Landing} />
 					<Route path="/join" component={() => <JoinGame setName={this.setName} setRoom={this.setRoom} />} />
 					<Route path="/game" component={() => <Game name={this.state.name} room={this.state.room} />} />
-					<Route exact path="/admin/:type" component={Admin} />
+					<Route exact path="/moderator/:type" component={Moderator} />
 					<Route path="/create" component={CreateGame} />
 					<Route path="/about" component={About} />
 					<Redirect to="/" />
