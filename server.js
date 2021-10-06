@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const { exec } = require("child_process");
 const app = express();
 const server = require("http").createServer(app);
 const auth = require("http-auth");
@@ -272,6 +273,16 @@ io.on("connection", socket => {
 	});
 });
 
+// Return the load averages of the container
+function getPosixUptime() {
+	return new Promise((resolve, reject) => {
+		exec('uptime  | grep -o \'load.*\'', (err, stdout, stderr) => {
+			if (err) { reject(stderr); }
+			resolve(stdout);
+		});
+	});
+}
+
 /** START API ROUTES */
 
 //API request to create a room
@@ -394,6 +405,12 @@ app.get("/api/buzzer/:room", (req, res) => {
 
 app.get("/api/health", basic.check((req, res) => { //for status pages
 	res.status(200).send(new Date(Date.now()));
+}));
+
+app.get("/api/load", basic.check((req, res) => {
+	getPosixUptime().then(uptime => {
+		res.status(200).send(JSON.stringify({ uptime }));
+	});
 }));
 
 // Handles any requests that don"t match the ones above

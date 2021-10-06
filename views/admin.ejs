@@ -19,8 +19,14 @@
 				});
 
 				fetch("/api/health").then(res => {
-					res.json().then(something => {
-						document.getElementById("server-health").innerHTML = something;
+					res.json().then(timestamp => {
+						document.getElementById("server-health").innerHTML = timestamp;
+					});
+				});
+
+				fetch("/api/load").then(res => {
+					res.json().then(loads => {
+						document.getElementById("load-average").innerHTML = loads.uptime.replace("l", "L");
 					});
 				});
 			}
@@ -42,6 +48,7 @@
 			<p id="rooms-created">...</p>
 			<h6>Server Health:</h6>
 			<p id="server-health" style="font-size: 0.8rem; margin-top: -30px;">...</p>
+			<p id="load-average" style="font-size: 0.8rem;">...</p>
 		</div>
 	</body>
 </html>
