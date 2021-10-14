@@ -1,38 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import Loadable from "react-loadable";
+import Landing from "./pages/Landing";
+import Game from "./pages/Game";
+import CreateGame from "./pages/CreateGame";
+import JoinGame from "./pages/JoinGame";
+import Moderator from "./pages/Moderator";
+import About from "./pages/About";
 import "./App.css";
-
-//Lazy-loaded components
-const Landing = Loadable({
-	loader: () => import("./pages/Landing"),
-	loading: React.Fragment
-});
-
-const Game = Loadable({
-	loader: () => import("./pages/Game"),
-	loading: React.Fragment
-});
-
-const Moderator = Loadable({
-	loader: () => import("./pages/Moderator"),
-	loading: React.Fragment
-});
-
-const About = Loadable({
-	loader: () => import("./pages/About"),
-	loading: React.Fragment
-});
-
-const JoinGame = Loadable({
-	loader: () => import("./pages/JoinGame"),
-	loading: React.Fragment
-});
-
-const CreateGame = Loadable({
-	loader: () => import("./pages/CreateGame"),
-	loading: React.Fragment
-});
 
 class App extends React.Component {
 	constructor(props) {
