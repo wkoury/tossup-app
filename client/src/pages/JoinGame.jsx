@@ -68,7 +68,7 @@ class JoinGame extends React.Component {
 									inputMode="numeric"
 									placeholder="Room"
 									name="room"
-									autocomplete="off"
+									autoComplete="off"
 									maxLength={6}
 									value={this.state.room}
 									onChange={e => this.handleChange(e)}
@@ -80,7 +80,7 @@ class JoinGame extends React.Component {
 									placeholder="Name"
 									maxLength={25}
 									name="name"
-									autocomplete="off"
+									autoComplete="off"
 									value={this.state.name}
 									onChange={e => this.handleChange(e)}
 								></input>
