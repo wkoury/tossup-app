@@ -32,7 +32,7 @@ class Game extends React.Component {
 			canSwitchTeams: true
 		};
 
-		setInterval(() => { //every half second, check to see if the socket is still connected
+		this.interval = setInterval(() => { //every half second, check to see if the socket is still connected
 			if (!this.state.socket.connected) {
 				this.setState({
 					disconnected: true
@@ -221,6 +221,7 @@ class Game extends React.Component {
 	}
 
 	componentWillUnmount() {
+		clearInterval(this.interval);
 		this.state.socket.disconnect();
 	}
 
