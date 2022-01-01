@@ -276,7 +276,7 @@ io.on("connection", socket => {
 // Return the load averages of the container
 function getPosixUptime() {
 	return new Promise((resolve, reject) => {
-		exec('uptime  | grep -o \'load.*\'', (err, stdout, stderr) => {
+		exec("uptime", (err, stdout, stderr) => {
 			if (err) { reject(stderr); }
 			resolve(stdout);
 		});
