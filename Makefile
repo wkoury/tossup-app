@@ -2,7 +2,7 @@ IMAGE="tossup"
 
 all: build
 
-.PHONY: dev build build-dev docker-build docker-run docker-run-prod deploy prune-dev-dependencies
+.PHONY: dev build build-dev docker-build docker-run docker-run-prod deploy prune-dev-dependencies clean
 
 dev:
 	yarn dev & cd client && yarn start
@@ -21,7 +21,7 @@ prune-dev-dependencies:
 	yarn install --production --frozen-lockfile & \
 	cd client && yarn install --production --frozen-lockfile
 
-docker-build:
+docker-build: clean
 	docker build --no-cache -t $(IMAGE) .
 
 docker-run:
@@ -32,3 +32,7 @@ docker-run-prod:
 
 deploy:
 	sh scripts/deploy.sh
+
+clean:
+	rm -rf node_modules & \
+	cd client && rm -rf build && rm -rf node_modules

@@ -2,7 +2,7 @@ FROM node:16.13.1
 
 RUN apt-get update && \
 	apt-get -y upgrade && \
-	apt-get -y install \
+	DEBIAN_FRONTEND=false apt-get -y install \
 	chromium
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
