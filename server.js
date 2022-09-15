@@ -3,42 +3,16 @@ const path = require("path");
 const { exec } = require("child_process");
 const app = express();
 const server = require("http").createServer(app);
+const auth = require("http-auth");
 var id = require("nodejs-unique-numeric-id-generator");
 const port = process.env.PORT || 8085;
 require("dotenv").config();
 
-/** START MIDDLEWARES */
-
-console.log(`Admin username: ${process.env.ADMIN_USERNAME}`);
-console.log(`Admin password: ${process.env.ADMIN_PASSWORD}`);
-
-function authentication(req, res, next) {
-    var authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-        res.setHeader('WWW-Authenticate', 'Basic');
-        err.status = 401;
-        return next(err);
-    }
-
-    var auth = new Buffer.from(authHeader.split(' ')[1],
-    'base64').toString().split(':');
-    var user = auth[0];
-    var pass = auth[1];
-
-    if (user == process.env.ADMIN_USERNAME && pass == process.env.ADMIN_PASSWORD) {
-        // If Authorized user
-        next();
-    } else {
-        var err = new Error('You are not authenticated!');
-        res.setHeader('WWW-Authenticate', 'Basic');
-        err.status = 401;
-        return next(err);
-    }
-
-}
-
-/** END MIDDLEWARES */
+// basic http authentication
+const basic = auth.basic({
+	realm: "Admin",
+	file: __dirname + "/db/admins.htpasswd"
+});
 
 /** START SERVER ROUTES */
 
@@ -57,9 +31,9 @@ app.set("view options", { layout: false });
 app.use(express.static("./client/src/"));
 
 //dashboard
-app.get("/admin", authentication, (req, res) => {
+app.get("/admin", basic.check((req, res) => {
 	res.render("admin");
-});
+}));
 
 /** END SERVER ROUTES */
 
@@ -372,17 +346,17 @@ app.get("/api/names/:room", (req, res) => {
 	} catch (err) { console.error(err); }
 });
 
-app.get("/api/roomCount", authentication, (req, res) => {
+app.get("/api/roomCount", basic.check((req, res) => {
 	return res.status(200).send({
 		count: rooms.length
 	});
-});
+}));
 
-app.get("/api/roomsCreated", authentication, (req, res) => {
+app.get("/api/roomsCreated", basic.check((req, res) => {
 	res.status(200).send({
 		count: roomsCreated
 	});
-});
+}));
 
 //get the room type
 app.get("/api/roomType/:room", (req, res) => {
@@ -429,15 +403,15 @@ app.get("/api/buzzer/:room", (req, res) => {
 	} catch (err) { console.error(err) }
 });
 
-app.get("/api/health", authentication, (req, res) => { //for status pages
+app.get("/api/health", basic.check((req, res) => { //for status pages
 	res.status(200).send(new Date(Date.now()));
-});
+}));
 
-app.get("/api/load", authentication, (req, res) => {
+app.get("/api/load", basic.check((req, res) => {
 	getPosixUptime().then(uptime => {
 		res.status(200).send(JSON.stringify({ uptime }));
 	});
-});
+}));
 
 // Handles any requests that don"t match the ones above
 app.get("*", (req, res) => {
