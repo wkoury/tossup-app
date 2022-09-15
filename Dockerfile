@@ -14,6 +14,6 @@ COPY . .
 RUN make build
 RUN make prune-dev-dependencies
 
-EXPOSE 80
+EXPOSE 8085
 
 ENTRYPOINT ["pm2-runtime", "server.js"]

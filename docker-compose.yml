@@ -3,5 +3,5 @@ services:
         image: tossup
         build: .
         ports:
-            - 8085:80
+            - 8085:8085
         restart: unless-stopped
