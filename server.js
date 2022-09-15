@@ -4,8 +4,8 @@ const { exec } = require("child_process");
 const app = express();
 const server = require("http").createServer(app);
 var id = require("nodejs-unique-numeric-id-generator");
-const port = process.env.PORT || 8085;
 require("dotenv").config();
+const port = process.env.PORT || 80;
 
 /** START MIDDLEWARES */
 
