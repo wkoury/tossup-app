@@ -9,12 +9,14 @@ require("dotenv").config();
 
 /** START MIDDLEWARES */
 
+console.log(`Admin username: ${process.env.ADMIN_USERNAME}`);
+console.log(`Admin password: ${process.env.ADMIN_PASSWORD}`);
+
 function authentication(req, res, next) {
     var authHeader = req.headers.authorization;
 
     if (!authHeader) {
         res.setHeader('WWW-Authenticate', 'Basic');
-		let err = new Error('Unauthorized');
         err.status = 401;
         return next(err);
     }
@@ -28,7 +30,7 @@ function authentication(req, res, next) {
         // If Authorized user
         next();
     } else {
-		let err = new Error('Unauthorized');
+        var err = new Error('You are not authenticated!');
         res.setHeader('WWW-Authenticate', 'Basic');
         err.status = 401;
         return next(err);
