@@ -5,7 +5,7 @@ const app = express();
 const server = require("http").createServer(app);
 const auth = require("http-auth");
 var id = require("nodejs-unique-numeric-id-generator");
-const port = process.env.PORT || 8085;
+const port = process.env.PORT || 80;
 require("dotenv").config();
 
 // basic http authentication
